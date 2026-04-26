@@ -1,0 +1,3426 @@
+Project - Progressive Project - IPL
+
+
+
+The International Premier League (IPL) is the world's leading cricket tournament, featuring teams from around the globe. The league management has identified the need for a modern web-based management system to handle team and player data, allow for player bidding, and present all the necessary information in an intuitive interface for both administrators and users. The objective of this project is to create a comprehensive digital platform for IPL management that integrates team composition, player bidding, and detailed statistical insights.
+
+Objective:
+
+The goal is to build a platform that enables administrators to manage team data, player bids, and matches, while also providing a user-friendly interface for fans to access real-time IPL updates, statistics, and team composition. The system should support secure data access and role-based controls for admins and users.
+
+Note:
+
+The submission of the project should only be done after the successful completion of all tasks by Day 26 of MS3.
+
+MS1: Establishing the Foundational Software Structure (Week 1)
+
+Scenario:
+
+The IPL League is starting its digital transformation, and the first step is to create a digital record of all teams and players.
+
+
+
+Day 1:
+Task1: Design the Entity models for Team, Cricketer and Match.
+You need to complete the implementation of the following classes:
+
+entity/ Cricketer.java
+
+private int cricketerId;private int teamId;
+
+private String cricketerName;private int age;
+
+private String nationality;private int experience;
+
+private String role;private int totalRuns;
+
+private int totalWickets;
+
+No-Argument Constructor: public Cricketer () { } - Default constructor for creating an empty product object.
+
+Parameterized Constructor: Cricketer(int cricketerId, int teamId, String cricketerName, int age, String nationality, int experience, String role, int totalRuns, int totalWickets){ }
+
+Methods: Getters and Setters:Provide encapsulation by allowing controlled access to fields.
+
+******
+
+entity/ Match.Java
+
+private int matchId;private int firstTeamId;
+
+private int secondTeamId;private Date matchDate;
+
+private String venue;private String result;
+
+private String status;private int winnerTeamId;    
+
+No-Argument Constructor: public Match (){ } - Default constructor for creating an empty product object.
+
+Parameterized Constructor: public Match(int matchId, int firstTeamId, int secondTeamId, Date matchDate, String venue, String result, String status, int winnerTeamId){ }
+
+Methods: Getters and Setters: Provide encapsulation by allowing controlled access to fields.
+
+*******************
+
+entity/ Team.Java
+
+private int teamId;private String teamName;
+
+private String location;private String ownerName;
+
+private int establishmentYear;
+
+No-Argument Constructor: public Team () { } - Default constructor for creating an empty product object.
+
+Parameterized Constructor: public Team(int teamId, String teamName, String location, String ownerName, int establishmentYear){}
+
+Methods: Getters and Setters: Provide encapsulation by allowing controlled access to fields.
+
+**************
+
+entity/ User.Java
+
+private int userId;private String fullName;
+
+private String username;private String password;
+
+private String email;private String role;
+
+No-Argument Constructor: public User () { } - Default constructor for creating an empty product object.
+
+Parameterized Constructor:public User(int userId, String fullName, String username, String password, String email, String role) {}
+
+Methods: Getters and Setters: Provide encapsulation by allowing controlled access to fields.
+
+DatabaseConnectionManager.Java
+
+properties: A static Properties object to hold the database configuration.
+
+private static void loadProperties() -Reads the application.properties file.
+
+Connection getConnection()Retrieves database connection details from properties.
+
+Creates a new database connection using DriverManager.Throws RuntimeException if the file is not found or cannot be read.
+
+
+
+
+
+Note: Don't hardcode the values in DatabaseConnectionManager.java file. Read it dynamically from application.properties file
+
+CREATE TABLE user (
+
+    user_id INT AUTO_INCREMENT PRIMARY KEY, 
+
+    full_name VARCHAR(255) NOT NULL,
+
+    username VARCHAR(50) NOT NULL,    
+
+    password VARCHAR(255) NOT NULL,
+
+    email VARCHAR(100) NOT NULL,
+
+    role VARCHAR(100) NOT NULL            
+
+);
+
+
+
+CREATE TABLE team (
+
+    team_id INT PRIMARY KEY AUTO_INCREMENT,
+
+    team_name VARCHAR(100) NOT NULL,
+
+    location VARCHAR(100),
+
+    owner_name VARCHAR(100),
+
+    establishment_year INT
+
+);
+
+
+
+CREATE TABLE cricketer (
+
+    cricketer_id INT PRIMARY KEY AUTO_INCREMENT,
+
+    team_id INT,
+
+    cricketer_name VARCHAR(100) NOT NULL,
+
+    age INT,
+
+    nationality VARCHAR(100),
+
+    experience INT,
+
+    role VARCHAR(50), 
+
+    total_runs INT,
+
+    total_wickets INT
+
+);
+
+NOTE: The role column in the Cricketer table is for “Batsman”, “Bowler”, “All-rounder” and “Wicketkeeper”. (Use exact these strings”
+
+CREATE TABLE matches (
+
+    match_id INT PRIMARY KEY AUTO_INCREMENT,
+
+    first_team_id INT NOT NULL,
+
+    second_team_id INT NOT NULL,
+
+    match_date DATE NOT NULL,
+
+    venue VARCHAR(100),
+
+    result VARCHAR(100),
+
+    status VARCHAR(100),
+
+    winner_team_id INT
+
+);
+
+NOTE: The role status in the Match table is for “Pending”, “Scheduled” and “Completed”. (Use exact these strings)
+
+
+
+
+
+Task 2: Build a layered architecture such as Client, Service, DAO, etc. Implement interfaces for DAO, DAO Impl, Service, Service Impl.
+
+
+You need to work on following files :
+
+CricketerDAOImpl.java
+
+This class implements the CricketerDAO interface and provides stubbed methods for managing Cricketer data.
+
+int addCricketer(Cricketer cricketer)-Adds a new cricketer. Returns -1 as a placeholder.
+
+Cricketer getCricketerById(int cricketerId)-Retrieves a cricketer by ID. Currently returns null.
+
+void updateCricketer(Cricketer cricketer)-Updates a cricketer's details. Does nothing in the current implementation.
+
+void deleteCricketer(int cricketerId)-Deletes a cricketer by ID. Does nothing in the current implementation.
+
+List<Cricketer> getAllCricketers()Retrieves all cricketers. Returns an empty list.
+
+dao/ MatchDAOImpl.java
+
+This class implements the MatchDAO interface and provides stubbed methods for managing Match data.
+
+Methods:
+
+addMatch(Match match)-Adds a new match. Returns -1 as a placeholder. Return Type: int
+
+getMatchById(int matchId)-Retrieves a match by ID. Currently returns null.Return Type: Match
+
+updateMatch(Match match)- Updates a match's details. Does nothing in the current implementation.Return Type: void
+
+deleteMatch(int matchId)Deletes a match by ID. Does nothing in the current implementation.Return Type: void
+
+getAllMatches() : Retrieves all matches. Returns an empty list.Return Type: List<Match>
+
+**************
+
+dao/ TeamDAOImpl.Java
+
+This class implements the TeamDAO interface and provides stubbed methods for managing Team data.
+
+Methods:
+
+addTeam(Team team) : Adds a new team. Returns -1 as a placeholder. Return Type: int
+
+getTeamById(int teamId) : Retrieves a team by its ID. Currently returns null.Return Type: Team
+
+updateTeam(Team team): Updates the details of a team. Does nothing in the current implementation.
+
+Return Type: void
+
+deleteTeam(int teamId) : Deletes a team by its ID. Does nothing in the current implementation.Return Type: void
+
+getAllTeams(): Retrieves all teams. Returns an empty list.Return Type: List<Team>
+
+Service/Impl/ CricketerServiceImplArraylist.java
+
+This class implements the CricketerService interface and provides stubbed methods for managing Cricketer data using an ArrayList approach.
+
+
+
+Methods:
+
+getAllCricketers() : Retrieves all cricketers. Currently returns an empty list. Return Type: List<Cricketer>
+
+addCricketer(Cricketer cricketer): Adds a new cricketer. Returns -1 as a placeholder. Return Type: Integer
+
+getAllCricketersSortedByExperience(): Retrieves all cricketers sorted by their experience. returns an empty list. Return Type: List<Cricketer>
+
+emptyArrayList(): Empties the ArrayList of cricketers. Calls the default implementation from CricketerService. Return Type: void
+
+************
+
+Service/Impl/ CricketerServiceImplJdbc.java
+
+This class implements the CricketerService interface and provides stubbed methods for managing Cricketer data using JDBC. It relies on a CricketerDAO instance for data access operations.
+
+Fields:
+
+cricketerDAO: A CricketerDAO object used to interact with the database or data source for CRUD operations related to Cricketer entities.
+
+Methods:
+
+getAllCricketers(): Retrieves all cricketers. Currently returns an empty list. Return Type: List<Cricketer>
+
+addCricketer(Cricketer cricketer): Adds a new cricketer. Returns -1 as a placeholder (should ideally return the ID or a success status). Return Type: Integer
+
+getAllCricketersSortedByExperience(): Retrieves all cricketers sorted by their experience. Currently returns an empty list. Return Type: List<Cricketer>
+
+updateCricketer(Cricketer cricketer): Updates the details of an existing cricketer. Currently does nothing.
+
+Return Type: void
+
+deleteCricketer(int cricketerId): Deletes a cricketer by their ID. Currently does nothing.Return Type: void
+
+getCricketerById(int cricketerId): Retrieves a cricketer by their ID. Currently returns null. Return Type: Cricketer
+
+*********************
+
+Service/Impl/ MatchServiceImplJdbc.java
+
+implements the MatchService
+
+Fields: matchDAO: A MatchDAO object used to perform data operations for Match entities, likely interacting with a database.
+
+Methods:
+
+getAllMatches(): Retrieves all matches. Currently returns an empty list.Return Type: List<Match>
+
+getMatchById(int matchId): Retrieves a match by its ID. Currently returns null.Return Type: Match
+
+addMatch(Match match): Adds a new match. Returns -1 as a placeholder (could represent failure or an ID).
+
+Return Type: Integer
+
+updateMatch(Match match): Updates an existing match. Currently does nothing.Return Type: void
+
+deleteMatch(int matchId): Deletes a match by its ID. Currently does nothing. Return Type: void
+
+**********
+
+Service/Impl/ TeamServiceImplArraylist .java
+
+This class implements the TeamService interface and provides basic functionality for managing Team entities using an ArrayList. It provides operations for retrieving, adding, and sorting teams.
+
+Methods:
+
+getAllTeams() : Retrieves all teams. Currently returns an empty list. Return Type: List<Team>
+
+addTeam(Team team) : Adds a new team. Currently returns -1 as a placeholder.Return Type: int
+
+getAllTeamsSortedByName(): Retrieves all teams sorted by their name. Currently returns an empty list.
+
+Return Type: List<Team>
+
+emptyArrayList() : Empties the internal ArrayList of teams. Calls the default method from TeamService.
+
+Return Type: void
+
+
+
+Service/Impl/ TeamServiceImplJdbc.java
+
+This class implements the TeamService interface and provides basic operations related to Team entities using JDBC. It interacts with the TeamDAO to handle database operations for team-related functionalities.
+
+Methods:
+
+getAllTeams() : Retrieves all teams from the data source. Currently returns an empty list. Return Type: List<Team>
+
+addTeam(Team team) : Adds a new team to the data source. Currently returns -1 as a placeholder.Return Type: int
+
+getAllTeamsSortedByName() : Retrieves all teams sorted by their name. Currently returns an empty list.
+
+Return Type: List<Team>
+
+getTeamById(int teamId) : Retrieves a team by its ID. Currently returns null.Return Type: Team
+
+updateTeam(Team team) : Updates the details of a given team. The implementation is empty for now.
+
+Return Type: void
+
+deleteTeam(int teamId) : Deletes a team by its ID. The implementation is empty for now.Return Type: void
+
+
+
+
+
+Day 2:
+Task1: Use Java Collection ArrayList to store sample Team and Cricketer data.
+You need to work on following files :
+
+TeamServiceImplArraylist.java
+
+CricketerServiceImplArraylist.java
+
+
+
+
+
+Task2: Display the list of Team sorted by team name and Cricketer sorted by experience by using Java’s Comparator and Comparable interfaces.
+
+
+You need to work on following files :
+
+Cricketer.java
+
+It implements the Comparable interface to allow sorting based on a cricketer's experience by default. The class includes constructors, getter and setter methods for accessing and modifying the attributes, and overrides the compareTo method for natural ordering.
+
+Team.java
+
+The class implements the Comparable interface to enable natural ordering of teams based on their names (teamName).
+
+CricketerServiceImplJdbc.java
+
+CricketerServiceImplArraylist class implements the CricketerService interface and provides functionality for managing a list of cricketers using an ArrayList.
+
+getAllCricketers: Retrieves the complete list of cricketers.
+
+addCricketer: Adds a new cricketer to the list and returns the updated size of the list.
+
+getAllCricketersSortedByExperience: Returns a list of cricketers sorted by their experience in ascending order.
+
+emptyArrayList: Clears the list by reinitializing it.
+
+TeamServiceImplArraylist.java
+
+The TeamServiceImplArraylist class implements the TeamService interface to manage a list of cricket teams using an ArrayList.
+
+getAllTeams: Retrieves the complete list of teams.
+
+addTeam: Adds a new team to the list and returns the updated size of the list.
+
+getAllTeamsSortedByName: Returns a list of teams sorted by their names in ascending order.
+
+emptyArrayList: Clears the team list by reinitializing it.
+
+This class provides in-memory storage and management of team details, enabling basic CRUD operations and sorting.
+
+
+
+
+
+Day 3:
+Task1: Apply exception handling using try-catch-finally and throw/throws. Start JDBC integration for persistent data storage.
+Task2: Develop the DAO layer for interaction with the database.
+
+
+You need to work on following files :
+
+CricketerDAO.java
+
+int addCricketer(Cricketer cricketer) throws SQLException;
+
+Cricketer getCricketerById(int cricketerId) throws SQLException;
+
+ void updateCricketer (Cricketer cricketer) throws SQLException;
+
+ void deleteCricketer (int cricketerId) throws SQLException;
+
+ List<Cricketer> getAllCricketers() throws SQLException;
+
+CricketerDAOImpl.java
+
+public int addCricketer(Cricketer cricketer) // Inserts a new cricketer into the database and returns the generated ID.
+
+public Cricketer getCricketerById(int cricketerId) // Retrieves a cricketer record from the database by its ID.
+
+public void updateCricketer(Cricketer cricketer) // Updates an existing cricketer record in the database.
+
+public void deleteCricketer(int cricketerId) // Deletes a cricketer record from the database by its ID.
+
+public List<Cricketer> getAllCricketers() // Retrieves all cricketer records from the database.
+
+MatchDAO
+
+int addMatch(Match match) throws SQLException;
+
+Match getMatchById(int matchId) throws SQLException;
+
+void updateMatch(Match match) throws SQLException;
+
+void deleteMatch(int matchId) throws SQLException;
+
+List<Match> getAllMatches() throws SQLException;
+
+MatchDAOImpl.java
+
+public int addMatch(Match match) // Inserts a new match into the database and returns the generated ID.
+
+public Match getMatchById(int matchId) // Retrieves a match record from the database by its ID.
+
+public void updateMatch(Match match) // Updates an existing match record in the database.
+
+public void deleteMatch(int matchId) // Deletes a match record from the database by its ID.
+
+public List<Match> getAllMatches() // Retrieves all match records from the database.The class uses the
+
+TeamDAO.java
+
+int addTeam(Team team) throws SQLException, SQLException;
+
+Team getTeamById(int teamId) throws SQLException;
+
+void updateTeam(Team team) throws SQLException;
+
+void deleteTeam(int teamId) throws SQLException;
+
+List<Team> getAllTeams() throws SQLException;
+
+TeamDAOImpl.java
+
+public int addTeam(Team team) // Inserts a new team into the database and returns the generated ID.
+
+public Team getTeamById(int teamId) // Retrieves a team record from the database by its ID.
+
+public void updateTeam(Team team) // Updates an existing team record in the database.
+
+public void deleteTeam(int teamId) // Deletes a team record from the database by its ID.
+
+public List<Team> getAllTeams() // Retrieves all team records from the database.
+
+CricketerService
+
+List<Cricketer> getAllCricketers() throws SQLException // Retrieves all cricketers from the data source.
+
+Integer addCricketer(Cricketer cricketer) throws SQLException // Adds a new cricketer and returns the generated ID.
+
+List<Cricketer> getAllCricketersSortedByExperience() throws SQLException // Retrieves all cricketers sorted by their experience.
+
+default void emptyArrayList() // Placeholder method that does nothing.
+
+default void updateCricketer(Cricketer cricketer) throws SQLException // Default implementation; does nothing (should not be implemented in ArrayList service).
+
+default void deleteCricketer(int cricketerId) throws SQLException // Default implementation; does nothing (should not be implemented in ArrayList service).
+
+default Cricketer getCricketerById(int cricketerId) throws SQLException // Default implementation; returns null.
+
+default List<Cricketer> getCricketersByTeam(int teamId) // Default implementation; returns null (should not be implemented in ArrayList and JDBC service).
+
+MatchService
+
+List<Match> getAllMatches() throws SQLException // Retrieves all matches from the data source.
+
+Match getMatchById(int matchId) throws SQLException // Retrieves a specific match by its ID.
+
+Integer addMatch(Match match) throws SQLException // Adds a new match and returns the generated ID.
+
+void updateMatch(Match match) throws SQLException // Updates an existing match in the data source.
+
+void deleteMatch(int matchId) throws SQLException // Deletes a match from the data source by its ID.
+
+default List<Match> getAllMatchesByStatus(String status) // Default implementation; returns null (should not be implemented in MatchServiceImplJdbc).
+
+TeamService
+
+List<Team> getAllTeams() throws SQLException // Retrieves all teams from the data source.
+
+int addTeam(Team team) throws SQLException // Adds a new team and returns the generated ID.
+
+List<Team> getAllTeamsSortedByName() throws SQLException // Retrieves all teams sorted alphabetically by name.
+
+default void emptyArrayList() // Default implementation; does nothing (placeholder).
+
+default Team getTeamById(int teamId) throws SQLException // Default implementation; returns null (should not be implemented in TeamServiceImplArrayList).
+
+default void updateTeam(Team team) throws SQLException // Default implementation; does nothing (should not be implemented in TeamServiceImplArrayList).
+
+default void deleteTeam(int teamId) throws SQLException // Default implementation; does nothing (should not be implemented in TeamServiceImplArrayList).
+
+CricketerServiceImplJdbc
+
+private CricketerDAO cricketerDAO; 
+
+public List<Cricketer> getAllCricketers() throws SQLException // Retrieves all cricketers from the database via CricketerDAO.
+
+public Integer addCricketer(Cricketer cricketer) throws SQLException // Adds a new cricketer to the database and returns the generated ID.
+
+public List<Cricketer> getAllCricketersSortedByExperience() throws SQLException // Retrieves all cricketers and returns them sorted by experience.
+
+public void updateCricketer(Cricketer cricketer) throws SQLException // Updates an existing cricketer’s details in the database.
+
+public void deleteCricketer(int cricketerId) throws SQLException // Deletes a cricketer from the database by their ID.
+
+public Cricketer getCricketerById(int cricketerId) throws SQLException // Retrieves a cricketer by their unique ID from the database.
+
+MatchServiceImplJdbc
+
+private MatchDAO matchDAO; 
+
+public List<Match> getAllMatches() throws SQLException // Retrieves all matches from the database via MatchDAO. 
+
+public Match getMatchById(int matchId) throws SQLException // Retrieves a match by its unique ID from the database. 
+
+public Integer addMatch(Match match) throws SQLException // Adds a new match to the database and returns the generated ID. 
+
+public void updateMatch(Match match) throws SQLException // Updates an existing match’s details in the database. 
+
+public void deleteMatch(int matchId) throws SQLException // Deletes a match from the database by its ID. 
+
+TeamServiceImplJdbc
+
+private TeamDAO teamDAO; 
+
+public List<Team> getAllTeams() throws SQLException // Retrieves all teams from the database via TeamDAO. 
+
+public int addTeam(Team team) throws SQLException // Adds a new team to the database and returns the generated ID. 
+
+public List<Team> getAllTeamsSortedByName() throws SQLException // Retrieves all teams and returns them sorted alphabetically by team name. 
+
+public Team getTeamById(int teamId) throws SQLException // Retrieves a team by its unique ID from the database. 
+
+public void updateTeam(Team team) throws SQLException // Updates an existing team’s details in the database. 
+
+public void deleteTeam(int teamId) throws SQLException // Deletes a team from the database by its ID.  
+
+
+
+MS2: Enhancing Database Interaction (Week 2)
+
+Scenario:
+
+With the foundational software components in place, IPL Project now focuses on enhancing database interactions and developing the application layer.
+
+
+
+Day 4:
+Task: Set up a Spring Boot project with an initial "Hello IPL Progressive Project" message. Also add the necessary Springboot annotations to the controller classes and entity classes.
+You need to work on following files :
+
+CricketerController.java
+
+Return Values for Each Method is null
+
+getAllCricketers() - Return Type: ResponseEntity<List<Cricketer>>
+
+getCricketerById() - Return Type: ResponseEntity<Cricketer>
+
+addCricketer() - Return Type: ResponseEntity<Integer>
+
+updateCricketer()- Return Type: ResponseEntity<Void>
+
+deleteCricketer() -Return Type: ResponseEntity<Void>
+
+getCricketersByTeam()- Return Type: ResponseEntity<List<Cricketer>>
+
+MatchController.java
+
+getAllMatches() : Return Type: ResponseEntity<List<Match>> - Returns a list of all matches in the system.
+
+getMatchById() : Return Type: ResponseEntity<Match> - Retrieves details of a specific match by its unique ID.
+
+addMatch() : Return Type: ResponseEntity<Integer> - Adds a new match to the system and returns the ID of the newly created match.
+
+updateMatch() : Return Type: ResponseEntity<Void> - Updates the details of an existing match by its ID. Does not return any body content.
+
+deleteMatch() : Return Type: ResponseEntity<Void> - Deletes a match by its ID. Does not return any body content.
+
+getAllMatchesByStatus(): Return Type: ResponseEntity<List<Match>> - Retrieves a list of matches filtered by their status (e.g., "completed," "ongoing").
+
+TeamController.java
+
+Return Values for Each Method is null
+
+getAllTeams() - Return Type: ResponseEntity<List<Team>>
+
+getTeamById() - Return Type: ResponseEntity<Team>
+
+addTeam() - Return Type: ResponseEntity<Integer>
+
+updateTeam() - Return Type: ResponseEntity<Void>
+
+deleteTeam() - Return Type: ResponseEntity<Void>
+
+getAllTeamsFromArrayList() - Return Type: ResponseEntity<List<Team>>
+
+addTeamToArrayList() - Return Type: ResponseEntity<Integer>
+
+getAllTeamsSortedByNameFromArrayList() - Return Type: ResponseEntity<List<Team>>
+
+Cricketer.java
+
+The Cricketer class is a JPA entity representing a cricketer in a cricket team management system.
+
+It includes attributes like
+
+private int cricketerId;
+
+private int teamId;
+
+private String cricketerName;
+
+private int age;
+
+private String nationality;
+
+private int experience;
+
+private String role;
+
+private int totalRuns;
+
+private int totalWickets;
+
+The class provides constructors, getters, and setters for data encapsulation and implements the Comparable interface to enable sorting by experience.
+
+It is annotated with @Entity for database mapping, with @Id and @GeneratedValue for primary key
+
+Match.java
+
+The Match class is a JPA entity representing a cricket match in a management system.
+
+It is mapped to the matches table and includes attributes
+
+private int matchId;
+
+private int firstTeamId;
+
+private int secondTeamId;
+
+private Date matchDate;
+
+private String venue;
+
+private String result;
+
+private String status;
+
+private int winnerTeamId;
+
+The class provides constructors, getters, and setters, with @Temporal annotation used for the matchDate to handle date fields.
+
+Team.java
+
+The Team class is a JPA entity representing a cricket team in a management system.
+
+It is mapped to a database table and includes attributes such as:
+
+private int teamId;: Unique identifier for the team.
+
+private String teamName;: Name of the team.
+
+private String location;: Location of the team.
+
+private String ownerName;: Owner's name of the team.
+
+private int establishmentYear;: Year the team was established.
+
+The class provides constructors, getters, and setters for all attributes. It also implements the Comparable interface to enable sorting of teams based on their teamName.
+
+User.java
+
+private int userId; 
+
+private String fullName; 
+
+private String username; 
+
+private String password; 
+
+private String email; 
+
+private String role; 
+
+User() – Default constructor to create an empty user object. 
+
+User(int userId, String fullName, String username, String password, String email, String role) – 
+
+Parameterized constructor to initialize a user with given details. 
+
+getters – Used to read user ID, full name, username, password, email, and role. 
+
+setters – Used to update user ID, full name, username, password, email, and role.  
+
+IplApplication.java
+
+The IplApplication class is the main entry point for the Spring Boot application.
+
+It is annotated with @SpringBootApplication, which enables auto-configuration, component scanning, and configuration properties in the application. The main method prints a welcome message to the console and then runs the Spring Boot application using SpringApplication.run(IplApplication.class, args). This class initializes the application context and starts the application.
+
+
+
+
+
+Day 5:
+Task:Construct Controller for Team and implement the JPA Service layers for Team.
+Create REST APIs in the Team controller to return data from ArrayLists (done on Day 2) as JSON and test it. Also implement the JPA services for Team
+
+
+
+You need to complete the implementation of the following classes, ensuring adherence to the specified API endpoints as listed below :
+
+TeamController.java
+
+public List<Team> getAllTeams() - GET /team // Returns a list of all teams (currently returns null).
+
+public Team getTeamById(int teamId) - GET /team/{teamId} // Retrieves a team by its ID (currently returns null).
+
+public List<Team> getAllTeamsFromArrayList() - GET /team/fromArrayList // Returns all teams stored in the ArrayList (currently returns null).
+
+public List<Team> getAllTeamsSortedByNameFromArrayList() - GET /team/fromArrayList/sorted 
+
+// Returns all teams from the ArrayList sorted by name (currently returns null).
+
+public int addTeam(Team team) - POST /team // Adds a new team using JPA and returns the generated ID (currently returns -1).
+
+public int addTeamToArrayList(Team team) - POST /team/toArrayList // Adds a new team to the ArrayList and returns the new list size or ID (currently returns -1).
+
+public void updateTeam(int teamId, Team team) - PUT /team/{teamId} // Updates the given team by its ID (currently does nothing).
+
+public void deleteTeam(int teamId) - DELETE /team/{teamId} 
+
+// Deletes a team by its ID (currently does nothing).
+
+TeamServiceImplArraylist.java
+
+The TeamServiceImplArraylist class is a service implementation that manages Team entities using an in-memory ArrayList. This implementation is a lightweight alternative for handling Team data without database persistence.
+
+getAllTeams():Return Type: List<Team> : Retrieves all Team entities stored in the in-memory ArrayList.
+
+addTeam(Team team): Return Type: int : Adds a new Team entity to the in-memory ArrayList.
+
+Returns: The current size of the ArrayList after adding the new team.
+
+getAllTeamsSortedByName():Return Type: List<Team> : Retrieves all Team entities from the in-memory ArrayList, sorted alphabetically by their team name.
+
+emptyArrayList():Return Type: void : Clears all Team entities from the in-memory ArrayList, resetting it to an empty state.
+
+TeamServiceImplJpa.java
+
+The TeamServiceImplJpa class is a service implementation for managing Team entities using JPA for database persistence.
+
+getAllTeams() : Retrieves all Team entities from the database. Currently returns an empty list as a placeholder.Return Type: List<Team> Throws: SQLException
+
+addTeam(Team team) : Adds a new Team entity to the database. Currently returns -1 as a placeholder.
+
+Return Type: int Throws: SQLException
+
+getAllTeamsSortedByName() : Retrieves all Team entities from the database, sorted by their name. Currently returns an empty list as a placeholder.Return Type: List<Team> Throws: SQLException
+
+getTeamById(int teamId) : Retrieves a Team entity by its ID from the database. Currently returns null as a placeholder.Return Type: Team Throws: SQLException
+
+updateTeam(Team team) : Updates an existing Team entity in the database. Currently does nothing as a placeholder.Return Type: void Throws: SQLException
+
+deleteTeam(int teamId) : Deletes a Team entity by its ID from the database. Currently does nothing as a placeholder.Return Type: void Throws: SQLException
+
+
+
+
+
+Day 6:
+Task: Implement Spring Boot JPA for Team, Cricketer and Match. And also shift CRUD operations to SpringDataJPA for Team
+You need to work on following files :
+
+CricketerRepository.java
+
+extends JpaRepository<Cricketer, Integer>.
+
+Primary Key Type: Integer
+
+MatchRepository.java
+
+extends JpaRepository<Match, Integer>
+
+Primary Key Type: Integer
+
+TeamRepository.java
+
+extends JpaRepository<Team, Integer>
+
+Team findByTeamId(int teamId);Defines a custom method findByTeamId(int teamId) to retrieve a Team entity by its teamId.
+
+Primary Key Type: Integer
+
+CricketerServiceImplJpa.java
+
+getAllCricketers(): Returns an empty list (currently a placeholder).
+
+addCricketer(Cricketer cricketer): Returns -1, indicating failure (currently a placeholder).
+
+getAllCricketersSortedByExperience(): Returns an empty list, intended to sort cricketers by experience (currently a placeholder).
+
+updateCricketer(Cricketer cricketer): Placeholder method for updating a cricketer.
+
+deleteCricketer(int cricketerId): Placeholder method for deleting a cricketer by ID.
+
+getCricketerById(int cricketerId): Returns null (currently a placeholder for fetching a cricketer by ID).
+
+getCricketersByTeam(int teamId): Returns null, intended to fetch cricketers belonging to a specific team (currently a placeholder).
+
+Exception Handling: Each method declares throws SQLException, although no actual SQL exceptions are thrown in the current implementation.
+
+MatchServiceImplJpa.java
+
+MatchRepository: Used for performing CRUD operations on Match entities.
+
+Methods:
+
+getAllMatches(): Returns an empty list (currently a placeholder method).
+
+getMatchById(int matchId): Returns null (currently a placeholder for fetching a match by its ID).
+
+addMatch(Match match): Returns -1, indicating failure (currently a placeholder for adding a match).
+
+updateMatch(Match match): Placeholder method for updating a match.
+
+deleteMatch(int matchId): Placeholder method for deleting a match by its ID.
+
+getAllMatchesByStatus(String status): Returns null (currently a placeholder for fetching matches by their status).
+
+Exception Handling: Each method declares throws SQLException, but no actual SQL exceptions are thrown in the current implementation.
+
+TeamServiceImplJpa.java
+
+TeamRepository: Used to perform CRUD operations on the Team entities in the database.
+
+Methods:
+
+getAllTeams(): Returns a list of all teams from the database using teamRepository.findAll(). Throws SQLException if any database-related issues occur.
+
+addTeam(Team team): Adds a new team to the database and returns the team ID after saving it. Throws SQLException if any database-related issues occur.
+
+getAllTeamsSortedByName(): Retrieves all teams from the database, sorts them by team name, and returns the sorted list. Throws SQLException if any database-related issues occur.
+
+getTeamById(int teamId): Retrieves a team by its ID using teamRepository.findByTeamId(teamId). Throws SQLException if any database-related issues occur.
+
+updateTeam(Team team): Updates an existing team by saving it to the database using teamRepository.save(team). Throws SQLException if any database-related issues occur.
+
+deleteTeam(int teamId): Deletes a team by its ID using teamRepository.deleteById(teamId). Throws SQLException if any database-related issues occur.
+
+Exception Handling: Each method declares throws SQLException, though no custom exception handling logic is included in the current implementation. If an exception occurs in the repository, it will be propagated up.
+
+
+
+
+
+Day 7:
+Task1: Add associations between Team, Cricketer, and Match entities.
+Update the Team, Cricketer, and Match entities to establish proper One-to-Many/Many-to-One associations between Team and Cricketer, as well as between Team and Match, and ensure the corresponding package structure is updated for Spring Data JPA compliance.
+
+Cricketer.java
+
+@ManyToOne and @JoinColumn: Define the relationship with the Team entity and specify the foreign
+
+Match.java
+
+matchId: The unique identifier for each match (primary key).
+
+firstTeam and secondTeam: Many-to-one relationships with the Team entity, representing the teams participating in the match.
+
+matchDate: The date of the match, stored with @Temporal(TemporalType.DATE).
+
+venue: The location where the match is held.
+
+result: The outcome of the match (e.g., win, loss, draw).
+
+status: The current status of the match (e.g., ongoing, completed).
+
+winnerTeam: The team that won the match, also a many-to-one relationship with the Team entity.
+
+The class includes a default constructor and a parameterized constructor for setting match details, with cascading enabled (CascadeType.MERGE) for team entities. This structure allows seamless database interaction, ensuring integrity between the Match and Team entities.
+
+Note: Your code should meet the following functional requirements:
+
+
+
+
+
+Proper associations between Team and Cricketer should be built.
+Team and Match Entity should be updated (during Spring Data JPA inclusion) to have these One-to-Many/Many-to-one Associations between Team and Match.
+Task2: Shift CRUD operations to SpringDataJPA for Cricketer
+
+
+You need to complete the implementation of the following classes, ensuring adherence to the specified API endpoints as listed below :
+
+CricketerController.java
+
+CricketerServiceImplJpa: The service implementation that handles business logic for Cricketer entities.
+
+GET /cricketer: Retrieves a list of all cricketers. Returns a ResponseEntity with an HTTP status of 200 OK if successful, or 500 Internal Server Error if an exception occurs.
+
+GET /cricketer/{cricketerId}: Retrieves a specific cricketer by their ID. Returns a ResponseEntity with the Cricketer object and 200 OK status if successful, or 500 Internal Server Error if an exception occurs.
+
+POST /cricketer: Adds a new cricketer. Accepts a Cricketer object in the request body and returns a ResponseEntity with the cricketer ID and 201 Created status, or 500 Internal Server Error if an exception occurs.
+
+PUT /cricketer/{cricketerId}: Updates an existing cricketer with the provided ID. Accepts the Cricketer object in the request body and returns 200 OK if successful, or 500 Internal Server Error if an exception occurs.
+
+DELETE /cricketer/{cricketerId}: Deletes a cricketer by their ID. Returns 204 No Content if successful, or 500 Internal Server Error if an exception occurs.
+
+GET /cricketer/cricketer/team/{teamId}: Retrieves a list of cricketers belonging to a specific team. Returns a ResponseEntity with the list of cricketers and 200 OK status if successful, or 500 Internal Server Error if an exception occurs.
+
+Exception Handling:Each method includes a try-catch block to catch SQLException exceptions. In case of an exception, a 500 Internal Server Error response is returned.
+
+CricketerDAOImpl.java
+
+addCricketer(Cricketer cricketer): Inserts a new cricketer into the cricketer table and retrieves the generated ID.
+
+getCricketerById(int cricketerId): Retrieves a cricketer's details by its ID.
+
+updateCricketer(Cricketer cricketer): Updates an existing cricketer's details in the database.
+
+deleteCricketer(int cricketerId): Deletes a cricketer record based on the provided ID.
+
+getAllCricketers(): Fetches all cricketer records from the database.
+
+The class uses PreparedStatement for secure parameterized queries to prevent SQL injection and ensures proper resource management by closing database connections and statements in the finally block. It handles SQLException and rethrows it for proper error management.
+
+MatchDAOImpl.java
+
+addMatch: Inserts a new match record into the database and returns the generated match ID.
+
+getMatchById: Retrieves a match record based on the provided match ID.
+
+updateMatch: Updates an existing match's details, such as team IDs, match date, venue, and result.
+
+deleteMatch: Deletes a match record using the match ID.
+
+getAllMatches: Fetches a list of all match records from the database.
+
+The class leverages JDBC to execute SQL queries and ensure proper resource management, including closing database connections, prepared statements, and result sets. It also handles SQL exceptions by printing the stack trace and rethrowing the exceptions to be handled at a higher level. This DAO implementation enables seamless interaction with the database while managing match-related data.
+
+CricketerRepository.java
+
+extends JpaRepository to provide CRUD operations for the Cricketer entity. It includes custom query methods :
+
+findByCricketerId(int cricketerId): Retrieves a cricketer based on their unique ID.
+
+findByTeam_TeamId(int teamId): Fetches all cricketers belonging to a specific team, identified by teamId.
+
+deleteByTeamId(int teamId): Deletes all cricketers associated with a given team. This method is annotated with @Modifying to indicate a non-read operation and @Transactional to ensure the delete operation is executed within a transaction.
+
+CricketerService.java
+
+getAllCricketers():Retrieves a list of all cricketers. Throws a SQLException in case of database-related issues.
+
+addCricketer(Cricketer cricketer):Adds a new cricketer to the system. Returns an Integer (likely the ID of the newly added cricketer), and throws a SQLException if an error occurs.
+
+getAllCricketersSortedByExperience():Retrieves a list of all cricketers sorted by their experience. Throws a SQLException if an error occurs.
+
+emptyArrayList():A default method that does not perform any action (likely intended for future use or as a placeholder).
+
+updateCricketer(Cricketer cricketer):A default method that provides an empty implementation. This method is not intended to be implemented in CricketerServiceImplArraylist.java.
+
+deleteCricketer(int cricketerId):A default method that provides an empty implementation for deleting a cricketer by their ID. It is not implemented in CricketerServiceImplArraylist.java.
+
+getCricketerById(int cricketerId):A default method that returns null, providing a placeholder for getting a cricketer by their ID. Not implemented in the service.
+
+getCricketersByTeam(int teamId):A default method returning null, intended for retrieving cricketers by a team ID. This method is not implemented in certain classes (CricketerServiceImplArraylist.java and CricketerServiceImplJdbc.java).
+
+CricketerServiceImplJpa.java
+
+getAllCricketers():Retrieves all cricketers from the database using cricketerRepository.findAll().
+
+addCricketer(Cricketer cricketer):Adds a new cricketer to the database using cricketerRepository.save(). It returns the cricketer's ID after saving.
+
+getAllCricketersSortedByExperience():Retrieves all cricketers and sorts them by experience using Comparator.comparing(Cricketer::getExperience).
+
+updateCricketer(Cricketer cricketer):Updates an existing cricketer by saving the cricketer entity again using cricketerRepository.save().
+
+deleteCricketer(int cricketerId):Deletes a cricketer by their ID using cricketerRepository.deleteById().
+
+getCricketerById(int cricketerId):Retrieves a cricketer by their ID using cricketerRepository.findByCricketerId().
+
+getCricketersByTeam(int teamId):Retrieves cricketers associated with a specific team, identified by teamId, using cricketerRepository.findByTeam_TeamId().
+
+Dependency Injection:The CricketerRepository is injected into the service via the constructor using @Autowired.
+
+TeamServiceImplJpa.java
+
+getAllTeams():Retrieves all teams from the database using teamRepository.findAll().
+
+addTeam(Team team):Adds a new team to the database using teamRepository.save() and returns the generated teamId after saving.
+
+getAllTeamsSortedByName():Retrieves all teams and sorts them by their teamName using Comparator.comparing(Team::getTeamName).
+
+getTeamById(int teamId):Retrieves a team by its ID using teamRepository.findByTeamId().
+
+updateTeam(Team team):Updates an existing team by saving the team entity again using teamRepository.save().
+
+deleteTeam(int teamId):Deletes all cricketers associated with a specific team using cricketerRepository.deleteByTeamId().
+
+Deletes the team itself using teamRepository.deleteById().
+
+Dependency Injection:
+
+The TeamRepository and CricketerRepository are injected via the constructor and field injection, respectively, using @Autowired.
+
+
+
+Exception Handling:The service appears to involve custom exceptions such as TeamAlreadyExistsException and TeamDoesNotExistException, although they are not explicitly used in the current implementation. These exceptions would likely be thrown in other methods for error handling when creating or deleting teams.
+
+
+
+
+
+Day 8:
+Task: Shift CRUD operations to SpringDataJPA for Match
+You need to complete the implementation of the following classes, ensuring adherence to the specified API endpoints as listed below :
+
+MatchController.java
+
+The MatchController class is a Spring REST controller that handles HTTP requests related to the Match entity
+
+GET /match - Retrieves a list of all matches.
+
+GET /match/{matchId} - Retrieves a specific match by its ID.
+
+POST /match - Adds a new match and returns the generated match ID.
+
+PUT /match/{matchId} - Updates an existing match with the given ID.
+
+DELETE /match/{matchId} - Deletes a match by its ID.
+
+GET /match/status/{status} - Retrieves a list of matches filtered by their status (e.g., "completed," "ongoing").
+
+It handles errors by returning an INTERNAL_SERVER_ERROR status if any exceptions occur during the database operations.
+
+MatchRepository.java
+
+extends JpaRepository to provide built-in methods for CRUD operations.
+
+findByMatchId(int matchId):Retrieves a Match entity by its unique matchId.
+
+findAllByStatus(String status):Retrieves a list of Match entities that have the specified status (e.g., "completed," "ongoing").
+
+deleteByTeamId(int teamId):Deletes all matches where either the first or second team has the specified teamId. This operation is marked with @Modifying and @Transactional to ensure that the changes are committed to the database.
+
+The repository leverages custom JPQL queries to handle complex operations like deleting matches involving a particular team, ensuring flexibility in database interactions.
+
+MatchService.java
+
+getAllMatches():Retrieves a list of all matches.
+
+getMatchById(int matchId):Retrieves a single match by its matchId.
+
+addMatch(Match match):Adds a new match to the database and returns the matchId of the created match.
+
+updateMatch(Match match):Updates an existing match with new data.
+
+deleteMatch(int matchId):Deletes a match by its matchId.
+
+getAllMatchesByStatus(String status) (default method):Retrieves a list of matches based on their status (e.g., "completed," "ongoing"). This method is defined as a default method to allow flexibility in its implementation in different service layers.
+
+This interface provides a blueprint for match-related operations in the service layer, ensuring consistent behavior and encapsulation of business logic related to match data.
+
+MatchServiceImplJpa.java
+
+getAllMatches():Retrieves a list of all matches from the matchRepository. It calls the findAll() method of the repository to get all records.
+
+getMatchById(int matchId):Retrieves a specific match by its matchId. It uses the findByMatchId() method of the repository.
+
+addMatch(Match match):Saves a new match to the database and returns the matchId of the newly created match using the save() method of the repository.
+
+updateMatch(Match match):Updates an existing match in the database by saving the modified match object.
+
+deleteMatch(int matchId):Deletes a match from the database by its matchId using the deleteById() method.
+
+getAllMatchesByStatus(String status):Retrieves a list of matches with a specific status (e.g., "completed," "ongoing"). It uses the findAllByStatus() method of the repository to fetch matches based on the status.
+
+TeamServiceImplJpa.java
+
+getAllTeams():Retrieves all teams from the teamRepository. It calls findAll() to fetch the list of teams.
+
+addTeam(Team team):Adds a new team to the database by saving the team object using save() method of the teamRepository. It returns the teamId of the newly added team.
+
+getAllTeamsSortedByName():Retrieves all teams and sorts them alphabetically by their team name using Comparator.comparing(Team::getTeamName).
+
+getTeamById(int teamId):Retrieves a team by its teamId using the findByTeamId() method of the teamRepository.
+
+updateTeam(Team team):Updates an existing team by saving the updated team object to the repository using the save() method.
+
+deleteTeam(int teamId):Deletes a team by its teamId from the database. This method first deletes any related records from matchRepository (by deleting matches involving the team) and cricketerRepository (by removing cricketers associated with the team). After that, the team itself is deleted from the teamRepository.
+
+Exception Handling:
+
+There are mentions of TeamAlreadyExistsException and TeamDoesNotExistException in the imports, suggesting that exceptions may be thrown for situations where:
+
+A team already exists when trying to add a new one.
+
+A team doesn't exist when attempting to fetch or delete it.
+
+This class provides efficient and organized service logic for managing teams, ensuring consistency across related entities.
+
+
+
+
+
+Day 9:
+Task: Add the following custom exceptions to Service layer:
+TeamDoesNotExistException: This exception should be thrown when fetching a team that does not exist in the system.
+
+TeamCricketerLimitExceededException: This exception should be thrown when attempting to add or update a cricketer to a team that has already reached its maximum limit of 11 cricketers. In IPL teams, each team can have a maximum of 11 players on the field, and adding more cricketers would exceed this limit.
+
+NoMatchesFoundException: This exception should be thrown when querying for matches with a specific status and no matches are found in the database. 
+
+TeamAlreadyExistsException: When creating or updating a team with data that already exists (like a team name that is already taken).
+
+
+
+You need to complete the implementation of the following classes and also raise add these exceptions as required in the Services classes.:
+
+TeamDoesNotExistException.java
+
+TeamCricketerLimitExceededException.java
+
+NoMatchesFoundException.java
+
+TeamAlreadyExistsException.java
+
+**************************************************************************
+
+TeamServiceImplJpa.java
+
+List<Team> getAllTeams()-Retrieves a list of all teams.
+
+int addTeam(Team team)-Adds a new team.Throws TeamAlreadyExistsException if a team with the same name already exists.
+
+List<Team> getAllTeamsSortedByName()-Retrieves a list of all teams sorted by their name.
+
+Team getTeamById(int teamId)-Retrieves a team by its ID.Throws TeamDoesNotExistException if the team does not exist.
+
+void updateTeam(Team team)-Updates the details of an existing team.Throws TeamAlreadyExistsException if another team with the same name already exists.
+
+void deleteTeam(int teamId)-Deletes a team by its ID, along with all associated matches and cricketers.
+
+**************************************************************************
+
+CricketerServiceImplJpa.java
+
+List<Cricketer> getAllCricketers()-Retrieves a list of all cricketers.
+
+Integer addCricketer(Cricketer cricketer)-Adds a new cricketer to a team.Throws TeamCricketerLimitExceededException if the team already has 11 cricketers.
+
+List<Cricketer> getAllCricketersSortedByExperience()-Retrieves a list of all cricketers sorted by their experience.
+
+void updateCricketer(Cricketer cricketer)-Updates the details of an existing cricketer.
+
+void deleteCricketer(int cricketerId)-Deletes a cricketer by their ID.
+
+Cricketer getCricketerById(int cricketerId)-Retrieves a cricketer by their ID.
+
+List<Cricketer> getCricketersByTeam(int teamId)-Retrieves a list of cricketers belonging to a specific team by team ID.
+
+**************************************************************************
+
+MatchServiceImplJpa.java
+
+List<Match> getAllMatches()-Retrieves a list of all matches.Throws SQLException if any database error occurs.
+
+Match getMatchById(int matchId)-Retrieves a match by its ID.Throws SQLException if any database error occurs.
+
+Integer addMatch(Match match)-Adds a new match.-Throws SQLException if any database error occurs.
+
+void updateMatch(Match match)-Updates the details of an existing match.Throws SQLException if any database error occurs.
+
+void deleteMatch(int matchId)-Deletes a match by its ID.
+
+List<Match> getAllMatchesByStatus(String status)-Retrieves a list of matches filtered by their status.Throws NoMatchesFoundException if no matches are found for the given status.
+
+**************************************************************************
+
+TeamRepository.java
+
+Team findByTeamId(int teamId)-Retrieves a team by its ID.
+
+Team findByTeamName(String name)-Retrieves a team by its name.
+
+***************************************************************************
+
+CricketerRepository.java
+
+Cricketer findByCricketerId(int cricketerId)-Retrieves a cricketer by their ID
+
+List<Cricketer> findByTeam_TeamId(int teamId)
+
+long countByTeam_TeamId(int teamId)
+
+void deleteByTeamId(int teamId)Deletes all cricketers associated with a specific team by team ID.Uses a custom JPQL query to perform the deletion.
+
+**************************************************************************
+
+TeamController.java
+
+ResponseEntity<List<Team>> getAllTeams()-Retrieves a list of all teams.
+
+Returns HTTP 500 on SQL exceptions.
+
+ResponseEntity<?> getTeamById(int teamId)-Retrieves a team by its ID.
+
+Returns HTTP 404 if the team does not exist (with a custom exception message).Returns HTTP 500 for generic errors.
+
+ResponseEntity<?> addTeam(Team team)-Adds a new team.
+
+Returns HTTP 201 with the created team's ID.Returns HTTP 400 if the team already exists (with a custom exception message).Returns HTTP 500 for generic errors.
+
+ResponseEntity<?> updateTeam(int teamId, Team team)-Updates an existing team's information by ID.
+
+Returns HTTP 400 if a conflict occurs (e.g., team name conflict).Returns HTTP 500 for generic errors.
+
+ResponseEntity<Void> deleteTeam(int teamId)Deletes a team by its ID.
+
+Returns HTTP 204 on successful deletion.Returns HTTP 500 on SQL exceptions.
+
+ResponseEntity<List<Team>> getAllTeamsFromArrayList()-Retrieves all teams stored in the in-memory ArrayList.
+
+Returns HTTP 200 with the list of teams.
+
+ResponseEntity<Integer> addTeamToArrayList(Team team)-Adds a new team to the in-memory ArrayList.
+
+Returns HTTP 201 with the new size of the list.
+
+ResponseEntity<List<Team>> getAllTeamsSortedByNameFromArrayList()-Retrieves all teams from the in-memory ArrayList, sorted by name.
+
+Returns HTTP 200 with the sorted list of teams.
+
+**************************************************************************
+
+CricketerController.java
+
+ResponseEntity<List<Cricketer>> getAllCricketers()-Retrieves a list of all cricketers. Returns an HTTP 500 status on SQL exceptions.
+
+ResponseEntity<Cricketer> getCricketerById(int cricketerId)-Retrieves a cricketer by ID. Returns an HTTP 500 status on SQL exceptions.
+
+ResponseEntity<?> addCricketer(Cricketer cricketer)-Adds a new cricketer. Handles team limit exceptions with HTTP 400 status and generic errors with HTTP 500.
+
+ResponseEntity<Void> updateCricketer(int cricketerId, Cricketer cricketer)-Updates an existing cricketer's information by ID. Returns an HTTP 500 status on SQL exceptions.
+
+ResponseEntity<Void> deleteCricketer(int cricketerId)-Deletes a cricketer by ID. Returns an HTTP 500 status on SQL exceptions.
+
+ResponseEntity<List<Cricketer>> getCricketersByTeam(int teamId)-Retrieves a list of cricketers belonging to a specific team by team ID. Returns an HTTP 500 status on SQL exceptions.
+
+**************************************************************************
+
+MatchController.java
+
+ResponseEntity<List<Match>> getAllMatches()-Retrieves a list of all matches. Returns an HTTP 500 status on SQL exceptions.
+
+ResponseEntity<Match> getMatchById(int matchId)-Retrieves a match by ID. Returns an HTTP 500 status on SQL exceptions.
+
+ResponseEntity<Integer> addMatch(Match match)-Adds a new match. Returns the created match ID with HTTP 201 status or an HTTP 500 status on SQL exceptions.
+
+ResponseEntity<Void> updateMatch(int matchId, Match match)-Updates an existing match's information by ID. Returns an HTTP 500 status on SQL exceptions.
+
+ResponseEntity<Void> deleteMatch(int matchId)-Deletes a match by ID. Returns an HTTP 204 status on success or HTTP 500 status on SQL exceptions.
+
+ResponseEntity<?> getAllMatchesByStatus(String status)Retrieves a list of matches filtered by their status. Returns HTTP 200 with the match list if found, HTTP 404 if no matches are found (with a custom exception message), or HTTP 500 on generic errors.
+
+**************************************************************************
+
+
+
+
+
+Day 10:
+Task: Create Voting Functionality and Implement CRUD for Voting using SpringDataJPA. Also create the table for Vote.
+You need to complete the implementation of the following classes, ensuring adherence to the specified API endpoints as listed below:
+
+
+
+Vote.java
+
+private int voteId;private String email;private String category;
+
+private Cricketer cricketer;private Teamteam;
+
+public Vote()
+
+Vote(int voteId, String email, String category, Cricketer cricketer, Team team)
+
+Include Getter and Setter Methods of the properties above
+
+**************************************************************************
+
+VoteController.java
+
+ResponseEntity<List<Vote>> getAllVotes()-Retrieves a list of all votes. Returns an HTTP response with the list of votes and a status code of 200 OK.
+
+ResponseEntity<Integer> createVote(Vote vote)-Creates a new vote. Returns an HTTP response with the ID of the created vote and a status code of 201 Created.
+
+ResponseEntity<Map<String, Long>> getVotesCountOfAllCategories()
+
+Retrieves the total number of votes for each category. Each key represents a category (e.g., “Team”, “Batsman”, “Bowler”, “All-rounder”, and “Wicketkeeper”), and each value represents the total number of votes for that category.
+
+**************************************************************************
+
+VoteServiceImpl.java
+
+ResponseEntity<List<Vote>> getAllVotes()-Retrieves a list of all votes from the database.
+
+Returns an HTTP response with the list of votes and a status code of 200 OK.
+
+ResponseEntity<Integer> createVote(Vote vote)- Creates a new vote entry in the database and returns the ID of the created vote.
+
+Returns an HTTP response with the ID of the created vote and a status code of 201 Created.
+
+ResponseEntity<Map<String, Long>> getVotesCountOfAllCategories()- Retrieves the total number of votes for each category (e.g., "Team", "Batsman", "Bowler", "All-rounder", "Wicketkeeper"). Each key represents a category, and each value represents the total number of votes for that category.
+
+Returns an HTTP response with the map of categories and their respective vote counts, along with a status code of 200 OK.
+
+**************************************************************************
+
+CricketerServiceImplJpa
+
+List<Cricketer> getAllCricketers()- Retrieves a list of all cricketers.
+
+Integer addCricketer(Cricketer cricketer)- Adds a new cricketer to a team. Throws a TeamCricketerLimitExceededException if the team already has 11 cricketers.
+
+List<Cricketer> getAllCricketersSortedByExperience()-Retrieves a list of all cricketers, sorted by their experience.
+
+void updateCricketer(Cricketer cricketer)- Updates the details of an existing cricketer.
+
+void deleteCricketer(int cricketerId)-Deletes a cricketer by their ID, along with the votes associated with them.
+
+Cricketer getCricketerById(int cricketerId)- Retrieves a cricketer by their ID.
+
+List<Cricketer> getCricketersByTeam(int teamId)- Retrieves a list of cricketers belonging to a specific team by the team ID.
+
+**************************************************************************
+
+TeamServiceImplJpa 
+
+List<Team> getAllTeams()-Retrieves a list of all teams.
+
+int addTeam(Team team)-Adds a new team. Throws a TeamAlreadyExistsException if a team with the same name already exists.
+
+List<Team> getAllTeamsSortedByName()-Retrieves a list of all teams, sorted by their name.
+
+Team getTeamById(int teamId)-Retrieves a team by its ID. Throws a TeamDoesNotExistException if the team with the specified ID doesn't exist.
+
+void updateTeam(Team team)-Updates the details of an existing team. Throws a TeamAlreadyExistsException if another team with the same name exists.
+
+void deleteTeam(int teamId)-Deletes a team by its ID, along with the related votes, matches, and cricketers associated with the team.
+
+************************************************************************** 
+
+VoteRepository.java
+
+Long countByCategory(String category)- Retrieves the total count of votes
+
+for a specific category (e.g., "Team", "Batsman",
+
+"Bowler", "All-rounder", "Wicketkeeper").
+
+void deleteByTeamId(int teamId)-Deletes all votes associated with a specific team ID using a JPQL query.
+
+void deleteByCricketerId(int cricketerId)- Deletes all votes associated with a specific cricketer ID using a JPQL query.
+
+************************************************************************** 
+
+VoteController.java:
+
+getAllVotes - GET /vote
+
+createVote - POST /vote
+
+getVotesCountOfAllCategories - GET /vote/count (categories - “Team”, “Batsman”, “Bowler”, “All-rounder” and “Wicketkeeper”)
+
+Note: Use exact strings for category as mentioned above,
+
+
+
+CREATE TABLE Vote (
+
+    vote_id INT PRIMARY KEY AUTO_INCREMENT,
+
+    email VARCHAR(100) NOT NULL,
+
+    category VARCHAR(100) NOT NULL,
+
+    cricketer_id INT,
+
+    team_id INT
+
+);
+
+
+
+
+
+
+
+Day 11:
+Task: Create Ticket Booking Functionality and Implement CRUD for Ticket Booking for matches which have status as “Scheduled” using SpringDataJPA.
+You need to complete the implementation of the following classes, ensuring adherence to the specified API endpoints as listed below:
+
+TicketBooking.java
+
+private int bookingId; 
+
+private String email; 
+
+private Match match; 
+
+private int numberOfTickets; 
+
+
+
+public TicketBooking() 
+
+TicketBooking(int bookingId, String email, Match match, int numberOfTickets) 
+
+// Include Getter and Setter Methods of the properties above  
+
+**************************************************************************
+
+TicketBookingService.java
+
+TicketBookingServiceImpl.java
+
+List<TicketBooking> getAllTicketBookings() - Retrieves a list of all ticket bookings from the repository.
+
+int createBooking(TicketBooking ticketBooking) - Creates a new ticket booking in the repository and returns the booking ID.
+
+void cancelBooking(int bookingId) - Cancels a ticket booking by its ID, removing it from the repository.
+
+List<TicketBooking> getBookingsByUserEmail(String email) - Retrieves a list of ticket bookings associated with a specific user email from the repository.
+
+**************************************************************************
+
+MatchServiceImplJpa.java
+
+List<Match> getAllMatches() throws SQLException - Retrieves a list of all matches from the repository.
+
+Match getMatchById(int matchId) throws SQLException - Retrieves a match by its unique match ID from the repository.
+
+int addMatch(Match match) throws SQLException - Adds a new match to the repository and returns the match ID of the saved match.
+
+void updateMatch(Match match) throws SQLException - Updates an existing match in the repository.
+
+void deleteMatch(int matchId) throws SQLException - Deletes a match by its ID and its associated ticket bookings from the repository.
+
+List<Match> getAllMatchesByStatus(String status) throws NoMatchesFoundException - Retrieves all matches with a specific status from the repository. Throws NoMatchesFoundException if no matches are found with the given status.
+
+**************************************************************************
+
+TeamServiceImplJpa.java 
+
+List<Team> getAllTeams() throws SQLException - Retrieves a list of all teams from the repository.
+
+int addTeam(Team team) throws TeamAlreadyExistsException - Adds a new team to the repository. Throws TeamAlreadyExistsException if a team with the same name already exists.
+
+List<Team> getAllTeamsSortedByName() throws SQLException - Retrieves all teams from the repository and returns them sorted by team name.
+
+Team getTeamById(int teamId) throws TeamDoesNotExistException - Retrieves a team by its ID from the repository. Throws TeamDoesNotExistException if the team does not exist.
+
+void updateTeam(Team team) throws TeamAlreadyExistsException - Updates an existing team in the repository. Throws TeamAlreadyExistsException if a team with the same name already exists and belongs to a different ID.
+
+void deleteTeam(int teamId) throws SQLException - Deletes a team by its ID and removes all associated votes, ticket bookings, matches, and cricketers from the repository.
+
+**************************************************************************
+
+TicketBookingRepository.Java
+
+List<TicketBooking> findByEmail(String email) - Retrieves a list of ticket bookings associated with a specific email.
+
+void deleteByTeamId(int teamId) - Deletes all ticket bookings for matches involving a specific team ID (either as the first team or second team) using a JPQL query.
+
+void deleteByMatchId(int matchId) - Deletes all ticket bookings associated with a specific match ID using a JPQL query.
+
+**************************************************************************
+
+TicketBookingController.Java
+
+ResponseEntity<List<TicketBooking>> getAllBookings()-Retrieves a list of all ticket bookings. Returns an HTTP 200 status upon success. Handles SQL exceptions with an HTTP 500 status.
+
+ResponseEntity<Integer> createBooking(TicketBooking ticketBooking)-Creates a new ticket booking. Returns the booking ID upon successful creation with an HTTP 201 status. Handles SQL exceptions with an HTTP 500 status.
+
+ResponseEntity<Void> cancelBooking(int bookingId)-Cancels a ticket booking by its ID. Returns an HTTP 204 status upon successful deletion. Handles SQL exceptions with an HTTP 500 status.
+
+ResponseEntity<List<TicketBooking>> getBookingsByUserEmail(String email)-Retrieves a list of ticket bookings for a specific user by their email. Returns an HTTP 200 status upon success. Handles SQL exceptions with an HTTP 500 status.
+
+Endpoints:
+
+getAllTicketBookings - GET /ticket
+
+createBooking - POST /ticket
+
+cancelBooking - DELETE /ticket/{bookingID}
+
+getBookingsByUserEmail - GET /ticket/user/{email}
+
+
+
+CREATE TABLE ticket_booking (
+
+    booking_id INT PRIMARY KEY AUTO_INCREMENT,
+
+    match_id INT NOT NULL,
+
+    email VARCHAR(100) NOT NULL,
+
+    number_of_tickets INT NOT NULL
+
+);
+
+
+
+
+
+Day 12:
+Scenario: For enhanced security and user experience, IPL wants registration/logins and wants to secure its APIs.
+
+
+
+
+
+Task: Implement Secure token functionalities
+
+
+You need to work on following files :
+
+JwtUtil.java
+
+String generateToken(String username)-Generates a JWT token for the given username with claims including the user's role.
+
+Retrieves the user's role from the database and sets the expiration time.
+
+Claims extractAllClaims(String token)-Extracts all claims from the given JWT token.
+
+Returns the claims map or null if the token is invalid.
+
+String extractUsername(String token)-Extracts the username from the given JWT token by parsing its subject.
+
+boolean isTokenExpired(String token)-Checks if the given JWT token is expired.
+
+Returns true if the expiration date has passed, otherwise false.
+
+boolean validateToken(String token, UserDetails userDetails)-Validates the given JWT token by comparing the username in the token with the user details and ensuring the token is not expired.
+
+*****************************************************************
+
+JwtRequestFilter.java
+
+private final UserDetailsService userDetailsService;
+
+private final JwtUtil jwtUtil;
+
+JwtRequestFilter(UserDetailsService userDetailsService, JwtUtil jwtUtil)- Initializes the JwtRequestFilter with a UserDetailsService and a JwtUtil instance.
+
+doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+
+Processes incoming requests to extract and validate the JWT token.
+
+If the token is valid, sets up the SecurityContext with the user's authentication details.
+
+Continues the filter chain by passing the request and response objects.
+
+*****************************************************************
+
+UserRepository
+
+User findByUsername(String username)
+
+Retrieves a User entity from the database based on the given username.
+
+**************************************************************************
+
+UserLoginServiceImpl
+
+List<User> getAllUsers()-Retrieves a list of all users from the repository.
+
+Optional<User> getUserById(Integer userId)-Retrieves a user by their unique ID.
+
+Returns an Optional<User> which may be empty if the user does not exist.
+
+User createUser(User user)-Creates a new user in the repository.
+
+User updateUser(User user)-Updates the details of an existing user in the repository.
+
+void deleteUser(Integer id)-Deletes a user by their unique ID from the repository.
+
+UserDetails loadUserByUsername(String username)-Loads user details by the given username, typically for authentication purposes.
+
+**************************************************************************
+
+MS3:
+
+
+
+Day 13:
+Task 1: Implement User Registration and Login functionalities.
+You need to implement the following classes, ensuring adherence to the specified API endpoints as listed below :
+
+UserServiceImpl.java
+
+
+
+UserRepository.java
+
+User findByUsername(String username) - Retrieves a User entity based on the provided username.
+
+User findByEmail(String email) - Retrieves a User entity based on the provided email address.
+
+*************************************************************
+
+LoginRequest
+
+String getUsername() - Retrieves the username provided in the login request.
+
+void setUsername(String username) - Sets the username in the login request.
+
+String getPassword() - Retrieves the password provided in the login request.
+
+void setPassword(String password) - Sets the password in the login request.
+
+**************************************************************************
+
+LoginResponse.java
+
+LoginResponse(String token, String roles, Integer userId) - Constructor to initialize the token, roles, and userId fields.
+
+String getToken() - Retrieves the JWT token from the response.
+
+void setToken(String token) - Sets the JWT token in the response.
+
+String getRoles() - Retrieves the roles assigned to the user.
+
+void setRole(String roles) - Sets the roles for the user.
+
+long getUserId() - Retrieves the unique user ID.
+
+void setUserId(Integer userId) - Sets the unique user ID.
+
+*************************************************************
+
+UserLoginController.java
+
+UserLoginServiceImpl userLoginService;
+
+AuthenticationManager authenticationManager;
+
+JwtUtil jwtUtil;
+
+ResponseEntity<?> registerUser(User user) - Registers a new user by invoking the createUser method from UserLoginService. Returns the created user or a conflict status if an exception occurs.
+
+ResponseEntity loginUser(LoginRequest loginRequest) - Authenticates a user using the provided username and password. Generates a JWT token and returns it along with the user's role and ID upon successful login. Throws an unauthorized status if authentication fails.
+
+registerUser - POST /user/register
+
+loginUser - POST /user/login
+
+**************************************************************************
+
+UserLoginServiceImpl.java
+
+List<User> getAllUsers() - Retrieves a list of all users from the repository.
+
+Optional<User> getUserById(Integer userId) - Retrieves a user by their unique ID. Returns an Optional<User>, which may be empty if the user does not exist.
+
+User createUser(User user) - Creates a new user in the repository after checking if the username and email are unique. Throws an exception if the username or email already exists.
+
+User updateUser(User user) - Updates the details of an existing user in the repository.
+
+void deleteUser(Integer id) - Deletes a user by their unique ID from the repository.
+
+
+
+
+
+Task 2: Secure all api. All endpoints should be allowed to only "ADMIN or USER" authority roles.
+
+
+You need to implement the following classes:
+
+SecurityConfig.java
+
+SecurityConfig - Configures application security using Spring Security.
+
+ 
+
+configure(AuthenticationManagerBuilder auth)-Configures the AuthenticationManager to use the UserDetailsService with a PasswordEncoder for authentication.
+
+configure(HttpSecurity http)-Configures HTTP security to:
+
+authenticationManagerBean()-Exposes the AuthenticationManager as a Spring bean for authentication in controllers or services.
+
+**************************************************************************
+
+Configurations.java
+
+PasswordEncoder passwordEncoder() - Configures and provides a BCryptPasswordEncoder bean to securely hash passwords.
+
+WebMvcConfigurer corsConfigurer() - Configures CORS settings for the application, allowing requests from any origin with methods GET, POST, PUT, and DELETE and unrestricted headers.
+
+
+
+A person with the role “USER” must be able to perform the following tasks:
+
+
+
+Ability to login/register on the platform.
+Ability to view details of teams/cricketers/matches.
+Ability to vote for their favorite team or cricketer.
+Ability to book tickets for matches that are in the "Scheduled" status through a button in the navbar bar.
+Ability to see their booked ticket for the Scheduled match.
+A person with the role “ADMIN” must be able to perform the following tasks:
+
+
+
+Ability to login/register on the platform.
+Ability to create/update/delete a team, cricketer and match
+Ability to view all the votes and tickets booked.
+Day 14 and Day 15:
+
+
+Scenario: IPL wants a modern Front-end and a mobile-friendly interface for its digital platform.
+
+
+
+
+
+Task: Apply Frontend validation for registration and login pages using JavaScript.
+
+
+The validation rules should include checks for the following cases:
+
+
+
+Username should not contain special characters.
+Passwords should be at least 8 digits and must contain at least one capital letter and one numeric.
+The fields in the registration form are all mandatory fields and do not accept empty inputs.
+The email entered should be a valid email address.
+Implement the following files:
+
+./frontend/day_14_15/login.html
+
+Title: "Login and Registration" is specified in the <title> tag.
+
+• Styles: The page uses the Bootstrap framework for styling by linking to a CSS file (css/bootstrap.css).
+
+• Login Form: A form with:
+
+A username input field.
+
+A password input field.
+
+A login button that triggers a login() JavaScript function (presumably defined in the js/validation.js file).
+
+Structure: The layout is created using a Bootstrap grid system with a single column for the login form.
+
+• JavaScript Integration: An external JavaScript file (js/validation.js) is linked for form validation or login logic.
+
+*******************************************************************
+
+.Title: "Login and Registration" is specified in the <title> tag.
+
+• Styles: The page uses the Bootstrap framework for styling by linking to a CSS file (css/bootstrap.css).
+
+• Registration Form: A form with:
+
+A name input field.
+
+An email input field.
+
+A username input field.
+
+A password input field.
+
+A register button that triggers a register() JavaScript function (presumably defined in the js/validation.js file).
+
+• Structure: The layout is created using a Bootstrap grid system with a single column for the registration form.
+
+• JavaScript Integration: An external JavaScript file (js/validation.js) is linked for form validation or registration logic.
+
+*******************************************************************
+
+./frontend/day_14_15/js/validation.js
+
+login()
+
+Retrieves input values for username and password from the login form.
+
+Logs the input values to the console for demonstration purposes.
+
+Intended for implementing login validation and authentication logic.
+
+register()
+
+Retrieves input values for name, email, username, and password from the registration form.
+
+Performs frontend validations, including:
+
+Ensuring all fields are filled.
+
+Validating email format using a regular expression.
+
+Restricting usernames to alphanumeric characters using a regex.
+
+Ensuring passwords are at least 8 characters long, contain one uppercase letter, and include at least one number.
+
+Displays alert messages if validations fail.
+
+Logs the input values to the console for demonstration purposes
+
+NOTE to Learners: Create separate JavaScript files to do the above validations.*
+
+
+
+
+
+Day 16:
+Task: Use TypeScript to design classes for User, Team, Cricketer, Match, Vote and TicketBooking. Also console the attributes of these tables as key-value pairs.
+Implement the following files:
+
+FrontEnd : src/app/ipl/types/Team.ts
+
+teamId: number
+
+teamName: string
+
+location: string
+
+ownerName: string
+
+establishmentYear: number
+
+Constructor: Initializes all attributes of the class.
+
+Method:displayInfo(): void - Prints team ID, name, and location.
+
+*****************************************************************
+
+FrontEnd : src/app/ipl/types/Cricketer.ts
+
+cricketerId: number
+
+teamId: number
+
+cricketerName: string
+
+age: number
+
+nationality: string
+
+experience: number
+
+role: string
+
+totalRuns: number
+
+totalWickets: number
+
+Constructor: Initializes all attributes of the class.
+
+Method:displayInfo(): void - Prints cricketer ID, team ID, and name.
+
+***************************************************************************
+
+FrontEnd : src/app/ipl/types/Match.ts
+
+matchId: number
+
+firstTeamId: number
+
+secondTeamId: number
+
+matchDate: Date
+
+venue: string
+
+result: string
+
+status: string
+
+winnerTeamId: number
+
+Constructor: Initializes all attributes of the class.
+
+Method:displayInfo(): void - Prints match ID, date, and venue
+
+******************************************************************
+
+FrontEnd : src/app/ipl/types/Team.ts
+
+teamId: number
+
+teamName: string
+
+location: string
+
+ownerName: string
+
+establishmentYear: number
+
+Constructor: Initializes all attributes of the class.
+
+Method:displayInfo(): void - Prints team ID, name, and location.
+
+********************************************************************************
+
+FrontEnd : src/app/ipl/types/ TicketBooking.ts
+
+bookingId: number
+
+email: string
+
+matchId: number
+
+numberOfTickets: number
+
+Constructor: Initializes all attributes of the class.
+
+Method:displayInfo(): void - Prints booking ID, email, and the number of tickets.
+
+**************************************************************************
+
+FrontEnd : src/app/ipl/types/User.ts
+
+userId: number
+
+fullName: string
+
+username: string
+
+password: string
+
+email: string
+
+role: string
+
+Constructor: Initializes all attributes of the class.
+
+Method:displayInfo(): void - Prints user ID, full name, and email.
+
+***************************************************************************
+
+FrontEnd : src/app/ipl/types/Vote.ts
+
+voteId: number
+
+email: string
+
+category: string
+
+cricketerId: number
+
+teamId: number
+
+Constructor: Initializes all attributes of the class.
+
+Method:displayInfo(): void - Prints vote ID and email.
+
+***************************************************************************
+
+
+
+
+
+
+
+
+
+Day 17:
+Task: Create Angular components for Team and Cricketer. Bind sample data to Team and Cricketer classes.
+Implement the following files:
+
+FrontEnd : src/app/ipl/Components/TeamSample.html
+
+The file contains an HTML structure to display team details.
+
+It uses dynamic data binding (e.g., {{ team.property }}) to populate data fields.
+
+The displayed information includes:
+
+1.      Team ID
+
+2.      Team Name
+
+3.      Location
+
+4.      Owner Name
+
+5.      Establishment Year
+
+The structure is intended for use in a web application.
+
+The team's data is dynamically fetched and rendered on the webpage.
+
+***********************************************************
+
+FrontEnd : src/app/ipl/Components/TeamSample.ts
+
+The component has a team property, which is an instance of the Team class.
+
+The team instance holds predefined data such as:
+
+1.      Team ID
+
+2.      Team Name
+
+3.      Location
+
+4.      Owner Name
+
+5.      Establishment Year
+
+The component is standalone, not relying on Angular modules.
+
+It uses external template and style files for rendering.
+
+*********************************************************
+
+src/app/ipl/components/teamsample/teamsample.component.scss
+
+
+
+FrontEnd : src/app/ipl/Components/CricketerSample.html
+
+The file contains an HTML structure to display cricketer details.
+
+It uses dynamic data binding (e.g., {{ cricketer.property }}) to populate data fields.
+
+The displayed information includes:
+
+1.      Cricketer ID
+
+2.      Team ID
+
+3.      Cricketer Name
+
+4.      Age
+
+5.      Nationality
+
+6.      Experience
+
+7.      Role
+
+8.      Total Runs
+
+9.      Total Wickets
+
+The structure is intended for use in a web application.
+
+The cricketer's data is dynamically fetched and rendered on the webpage.
+
+***********************************************************************
+
+FrontEnd : src/app/ipl/Components/CricketerSample.ts
+
+It has a cricketer property, which is an instance of the Cricketer class.
+
+The cricketer instance holds predefined data such as:
+
+ID
+
+Name
+
+Age
+
+Nationality
+
+Experience
+
+Role
+
+Total Runs
+
+Total Wickets
+
+The component is standalone, not relying on Angular modules.
+
+It uses an external template and style file for rendering.
+
+*************************************************************************************************
+
+src/app/ipl/components/cricketersample/cricketersample.component.scss
+
+
+
+
+
+Day 18:
+Task1: Implement two-way data binding and event binding for Team using angular forms.
+Implement the following files:
+
+FrontEnd : src/app/ipl/Components/teamcreate.html
+
+The file contains an HTML structure to create and manage a team form.
+
+It uses Angular's reactive forms (formGroup) for form handling and validation.
+
+The form captures the following details:
+
+Team ID
+
+Team Name
+
+Location
+
+Owner Name
+
+Establishment Year
+
+The structure incorporates:
+
+Dynamic data binding (e.g., formControlName) to link form fields with reactive form controls.
+
+Validation messages displayed using conditional rendering (*ngIf) when fields are invalid and touched.
+
+Event binding for submitting the form (ngSubmit="onSubmit()") and resetting the form (click="resetForm()").
+
+Conditional rendering to display success or error messages after form submission.
+
+******************************************************************
+
+FrontEnd : src/app/ipl/Components/teamcreate.ts
+
+The component has a teamForm property, which is a reactive form group used to create a new team.
+
+The form captures the following data:
+
+Team ID
+
+Team Name
+
+Location
+
+Owner Name
+
+Establishment Year
+
+The component also includes properties for successMessage and errorMessage to manage feedback messages after form submission.
+
+It uses external template and style files for rendering.
+
+The component provides the following methods:
+
+onSubmit(): Handles form submission, validates the form, and sets appropriate success or error messages.
+
+resetForm(): Resets the form fields to their initial state, including the default establishment year.
+
+***************************************************
+
+src/app/ipl/components/teamcreate/teamcreate.component.scss
+
+
+
+
+
+Task2: Add Cricketer data using JSON Array. Showcase Cricketer data using *ngFor and *ngIf directives in Angular.
+
+
+Implement the following files:
+
+FrontEnd : src/app/ipl/Components/Cricketerarray.html
+
+The file contains an HTML structure to display cricketer details.
+
+It uses dynamic data binding (e.g., {{ cricketer.property }}) to populate data fields.
+
+The displayed information includes:
+
+Cricketer Name
+
+Age
+
+Nationality
+
+Role
+
+Total Runs
+
+Total Wickets
+
+Experience
+
+Team ID
+
+The structure incorporates:
+
+Conditional rendering with *ngIf to toggle the visibility of cricketer data.
+
+A button to toggle the display of cricketer details, using the toggleCricketers() method to update the state.
+
+A fallback message when no cricketers are available to display.
+
+****************************************************************
+
+FrontEnd : src/app/ipl/Components/Cricketerarray.ts
+
+The component has a cricketers property, which is an array of Cricketer objects.
+
+The array holds predefined data such as:
+
+Cricketer ID
+
+Team ID
+
+Cricketer Name
+
+Age
+
+Nationality
+
+Experience
+
+Role
+
+Total Runs
+
+Total Wickets
+
+The component also includes a showCricketers property to manage the visibility of the cricketer list.
+
+It uses an external template and style files for rendering.
+
+The toggleCricketers() method allows toggling the display of cricketer data.
+
+The component initializes the cricketers array with sample data in the ngOnInit() lifecycle hook.
+
+***************************************************************************************************
+
+src/app/ipl/components/cricketerarray/cricketerarray.component.scss
+
+****************************************************************************************
+
+FrontEnd : src/app/ipl/ipl.module.ts
+
+Defines the IplModule to manage IPL-related components and features.
+
+Imports:
+
+CommonModule for Angular directives like ngIf and ngFor.
+
+ReactiveFormsModule for reactive forms and validation.
+
+HttpClientModule for API communication.
+
+Declares:
+
+TeamCreateComponent for creating teams using reactive forms.
+
+FrontEnd : src/app/ipl/ipl.module.ts
+
+Defines the IplModule to manage IPL-related components and features.
+
+Imports:
+
+CommonModule for Angular directives like ngIf and ngFor.
+
+ReactiveFormsModule for reactive forms and validation.
+
+HttpClientModule for API communication.
+
+Declares:
+
+TeamCreateComponent for creating teams using reactive forms.
+
+
+
+
+
+Day 19:
+Task: Create Angular components for Cricketer and Match. Implement two-way data binding and event binding in Angular Forms.
+Implement the following files:
+
+FrontEnd : src/app/ipl/Components/ cricketercreate.component.html
+
+The file contains an HTML structure to create and manage a cricketer form.
+
+It uses Angular's reactive forms (formGroup) for form handling and validation.
+
+The form captures the following details:
+
+Cricketer ID
+
+Team ID
+
+Cricketer Name
+
+Age
+
+Nationality
+
+Experience
+
+Role
+
+Total Runs
+
+Total Wickets
+
+Dynamic data binding (e.g., formControlName) to link form fields with reactive form controls.
+
+Event binding for submitting the form (ngSubmit="onSubmit()") and resetting the form (click="resetForm()").
+
+Conditional rendering to display success (*ngIf="successMessage") or error (*ngIf="errorMessage") messages after form submission.
+
+***************************************************************************
+
+FrontEnd : src/app/ipl/Components/ cricketercreate.component.ts
+
+The component has a cricketerForm property, which is a reactive form group used to create a new cricketer.
+
+The form captures the following data:
+
+Cricketer ID
+
+Team ID
+
+Cricketer Name
+
+Age
+
+Nationality
+
+Experience
+
+Role
+
+Total Runs
+
+Total Wickets
+
+The component also includes properties for successMessage and errorMessage to manage feedback messages after form submission.
+
+It uses external template and style files for rendering.
+
+The component provides the following methods:
+
+onSubmit(): Handles form submission, validates the form, sets appropriate success or error messages, and logs the form data.
+
+resetForm(): Resets the form fields to their initial state.
+
+************************************************************
+
+src/app/ipl/components/cricketercreate/cricketercreate.component.scss
+
+*************************************************************************************************
+
+FrontEnd : src/app/ipl/Components/matchcreate.component.html
+
+The file contains an HTML structure to create and manage a match form.
+
+It uses Angular's reactive forms (formGroup) for form handling and validation.
+
+The form captures the following details:
+
+Match ID
+
+First Team ID
+
+Second Team ID
+
+Match Date
+
+Venue
+
+Result
+
+Status
+
+Winner Team ID
+
+Dynamic data binding (e.g., formControlName) to link form fields with reactive form controls.
+
+Event binding for submitting the form (ngSubmit="onSubmit()") and resetting the form (click="resetForm()").
+
+Conditional rendering to display success (*ngIf="successMessage") or error (*ngIf="errorMessage") messages after form submission.
+
+***********************************************************************************************
+
+FrontEnd : src/app/ipl/Components/matchcreate.component.ts
+
+The component has a matchForm property, which is a reactive form group used to create a new match.
+
+The form captures the following data:
+
+Match ID
+
+First Team ID
+
+Second Team ID
+
+Match Date
+
+Venue
+
+Result
+
+Status
+
+Winner Team ID
+
+The component also includes properties for successMessage and errorMessage to manage feedback messages after form submission.
+
+It uses external template and style files for rendering.
+
+The component provides the following methods:
+
+onSubmit(): Handles form submission, validates the form, sets appropriate success or error messages, logs the form data, and resets the form on success.
+
+resetForm(): Resets the form fields to their initial state.
+
+************************************************************************************
+
+src/app/ipl/components/matchcreate/matchcreate.component.scss
+
+***********************************************
+
+﻿FrontEnd : src/app/ipl/ipl.module.ts
+
+Defines the IplModule to manage IPL-related components and features.
+
+Imports:
+
+CommonModule for Angular directives like *ngIf and *ngFor.
+
+ReactiveFormsModule for reactive forms and validation.
+
+HttpClientModule for API communication.
+
+Declares:
+
+TeamCreateComponent for creating teams using reactive forms.
+
+CricketerCreateComponent for creating cricketers using reactive forms.
+
+MatchCreateComponent for creating matches using reactive forms.
+
+
+
+
+
+Day 20:
+Task: Develop Angular components for creating votes and ticket bookings, utilizing two-way data binding and event binding in Angular forms.
+Implement the following files:
+
+FrontEnd : src/app/ipl/Components/vote.component.html
+
+It uses Angular's reactive forms (formGroup) for form handling and validation.
+
+The form captures the following details:
+
+Vote ID
+
+Email
+
+Category
+
+Cricketer ID
+
+Team ID
+
+Dynamic data binding (e.g., formControlName) to link form fields with reactive form controls.
+
+Event binding for submitting the form (ngSubmit="onSubmit()") and resetting the form (click="resetForm()").
+
+Conditional rendering to display success (*ngIf="successMessage") or error (*ngIf="errorMessage") messages after form submission.
+
+*************************************************************************************
+
+FrontEnd : src/app/ipl/Components/vote.component.ts
+
+The component has a voteForm property, which is a reactive form group used to create a new vote submission.
+
+The form captures the following data:
+
+·      Vote ID
+
+·      Email
+
+·      Category
+
+·      Cricketer ID
+
+·      Team ID
+
+The component also includes properties for successMessage and errorMessage to manage feedback messages after form submission.
+
+It uses external template and style files for rendering.
+
+The component provides the following methods:
+
+·      onSubmit(): Handles form submission, validates the form, sets appropriate success or error messages, logs the form data, and resets the form on success.
+
+·      resetForm(): Resets the form fields to their initial state.
+
+
+
+***********************************************************************
+
+src/app/ipl/components/vote/vote.component.scss
+
+*************************
+
+FrontEnd : src/app/ipl/Components/ticketbooking.component.html
+
+This Angular component is designed for ticket booking for events or matches.
+
+It includes a form with fields for:
+
+Booking ID (numeric input)
+
+Email (email input)
+
+Match ID (numeric input)
+
+Number of Tickets (numeric input)
+
+The form uses Angular Reactive Forms (formGroup) for form control and validation.
+
+Users can:
+
+Submit the form to book tickets.
+
+Reset the form to clear all fields.
+
+Feedback messages are displayed after form submission:
+
+A success message upon successful booking.
+
+An error message in case of booking failure.
+
+The design ensures a user-friendly and efficient ticket booking experience.
+
+*********************************************************************************
+
+FrontEnd : src/app/ipl/Components/ticketbooking.component.ts
+
+This TypeScript file defines the TicketBookingComponent, which handles ticket booking functionality in an Angular application.
+
+It imports necessary Angular modules such as FormBuilder, FormGroup, and Validators to manage form creation and validation.
+
+The component initializes a reactive form with fields:
+
+·      bookingId (required)
+
+·      email (required and must be a valid email)
+
+·      matchId (required)
+
+·      numberOfTickets (required and must be at least 1)
+
+The onSubmit method:
+
+Validates the form input.
+
+Sets the ticketBooking object if valid.
+
+·      Displays a success or error message accordingly.
+
+·      Resets the form after successful submission.
+
+The resetForm method clears all form inputs.
+
+The component handles both successful and erroneous form submissions, ensuring proper user feedback.
+
+**************************************************************************************
+
+src/app/ipl/components/ticketbooking/ticketbooking.component.scss
+
+*******************************************************************************************************************************************
+
+FrontEnd : src/app/ipl/ipl.module.ts
+
+Defines the IplModule to manage IPL-related components and features.
+
+Imports:
+
+CommonModule for Angular directives like *ngIf and *ngFor.
+
+ReactiveFormsModule for reactive forms and validation.
+
+HttpClientModule for API communication.
+
+Declares:
+
+TeamCreateComponent for creating teams using reactive forms.
+
+CricketerCreateComponent for creating cricketers using reactive forms.
+
+MatchCreateComponent for creating matches using reactive forms.
+
+TicketBookingComponent for booking tickets.
+
+VoteComponent for submitting votes.
+
+*********************************************************************
+
+
+
+
+
+Day 21:
+Task1: Apply Frontend form functionalities and validation for registration and login forms. Design forms to capture user data.
+The validation rules should include checks for the following cases:
+
+
+
+The email entered should be a valid email address.
+Username should not contain special characters.
+Passwords should be at least 8 digits and must contain at least one capital letter and one numeric.
+The fields in the registration form are all mandatory fields and do not accept empty inputs.
+Note: The error messages from the Backend should be properly propagated and displayed in UI.
+
+Implement the following files:
+
+FrontEnd : login.component.html
+
+It uses Angular's reactive forms (formGroup) for form handling and validation.
+
+The form captures the following details:
+
+·      Username
+
+·      Password
+
+Dynamic data binding (e.g., formControlName) is used to link form fields with reactive form controls.
+
+Event binding is implemented for submitting the form (ngSubmit="onSubmit()").
+
+Conditional rendering is used to display validation messages when fields are touched and invalid.
+
+Success (*ngIf="successMessage") or error (*ngIf="errorMessage") messages are shown after form submission.
+
+*****************************************************************************
+
+FrontEnd :login.component.ts
+
+The component has a loginForm property, which is a reactive form group used to capture user login credentials.
+
+The form captures the following data:
+
+• Username
+
+• Password
+
+The component also includes properties for successMessage and errorMessage to manage feedback messages after form submission.
+
+It uses external template and style files for rendering.
+
+The component provides the following methods:
+
+• onSubmit(): Handles form submission, validates the form, sets appropriate success or error messages, and simulates a backend login error based on the username.
+
+• simulateBackendLoginError(): Simulates an error from the backend if the username matches a predefined error condition.
+
+********************************************************************************
+
+src/app/auth/components/login/login.component.scss
+
+src/app/auth/components/registration/registration.component.ts
+
+FrontEnd : src/app/auth/Components/ registration.component.html
+
+It uses Angular's reactive forms (formGroup) for form handling and validation.
+
+The form captures the following details:
+
+• Full Name
+
+• Username
+
+• Email
+
+• Password
+
+Dynamic data binding (e.g., formControlName) is used to link form fields with reactive form controls.
+
+Event binding is implemented for submitting the form (ngSubmit="onSubmit()") and resetting the form ((click)="resetForm()").
+
+Conditional rendering is used to display validation messages when fields are touched and invalid.
+
+Success (*ngIf="successMessage") or error (*ngIf="errorMessage") messages are shown after form submission.
+
+************************************************************************
+
+FrontEnd : src/app/auth/Components/ registration.component.ts
+
+The component has a registrationForm property, which is a reactive form group used to capture user registration details.
+
+The form captures the following data:
+
+• Full Name
+
+• Username
+
+• Email
+
+• Password
+
+The component also includes properties for successMessage and errorMessage to manage feedback messages after form submission.
+
+It uses external template and style files for rendering.
+
+The component provides the following methods:
+
+• onSubmit(): Handles form submission, validates the form, sets appropriate success or error messages, logs the form data, and resets the form on successful submission.
+
+• resetForm(): Resets the form fields to their initial state.
+
+************************************************
+
+
+
+Task2: Continue form functionalities and validations for Team and Cricketer forms.
+
+
+The validation rules should include checks for the following cases:
+
+
+
+
+
+Team id cannot be null.
+Experience of the cricketer has to be non-negative.
+Team names must not contain any special characters.
+There should be proper validation that the email is a proper email address.
+Note: The error messages from the Backend should be properly propagated and displayed in UI.
+
+Implement the following files:
+
+FrontEnd : src/app/ipl/Components/ teamcreate.component.html
+
+The team creation form component uses Angular's reactive forms (formGroup) for form handling and validation.
+
+The form captures the following details:
+
+• Team ID
+
+• Team Name
+
+• Location
+
+• Owner Name
+
+• Establishment Year
+
+Dynamic data binding (e.g., formControlName) is used to link form fields with reactive form controls.
+
+Event binding is implemented for submitting the form (ngSubmit="onSubmit()") and resetting the form ((click)="resetForm()").
+
+Conditional rendering is used to display validation messages when fields are touched and invalid.
+
+Success (*ngIf="successMessage") or error (*ngIf="errorMessage") messages are shown after form submission.
+
+Form validation ensures required fields, pattern restrictions, and numerical constraints, such as minimum and maximum values for the establishment year.
+
+************************************************************************************
+
+FrontEnd : src/app/ipl/Components/ teamcreate.component.ts
+
+The component has a teamForm property, which is a reactive form group used to capture team details.
+
+The form captures the following data:
+
+• Team ID
+
+• Team Name
+
+• Location
+
+• Owner Name
+
+• Establishment Year
+
+The component also includes properties for successMessage and errorMessage to manage feedback messages after form submission.
+
+It uses external template and style files for rendering.
+
+The component provides the following methods:
+
+• onSubmit(): Handles form submission, validates the form, simulates a backend error, sets appropriate success or error messages, logs the form data, and resets the form on successful submission.
+
+• simulateBackendError(): Simulates an error if the team name matches a predefined condition.
+
+• resetForm(): Resets the form fields to their initial state, setting establishmentYear to the current year.
+
+***************************************************************************************
+
+src/app/ipl/components/teamcreate/teamcreate.component.scss
+
+FrontEnd : src/app/auth/auth.module.ts
+
+The AuthModule is an Angular feature module that handles authentication-related components and functionality.
+
+It declares the following components:
+
+• RegistrationComponent – Manages user registration.
+
+• LoginComponent – Manages user login.
+
+The module imports the following dependencies:
+
+• CommonModule – Provides common Angular directives and pipes.
+
+• AuthRoutingModule – Manages authentication-related routing.
+
+• ReactiveFormsModule – Enables reactive forms for handling user inputs.
+
+• HttpClientModule – Facilitates HTTP communication with backend services.
+
+Currently, no components or modules are exported from this module.
+
+********************************************************************
+
+FrontEnd : src/app/ipl/Components/ cricketercreate.component.html
+
+The cricketer creation form component uses Angular's reactive forms (formGroup) for form handling and validation.
+
+The form captures the following details:
+
+• Cricketer ID
+
+• Team ID
+
+• Cricketer Name
+
+• Age
+
+• Nationality
+
+• Experience
+
+• Role
+
+• Total Runs
+
+• Total Wickets
+
+Dynamic data binding (e.g., formControlName) is used to link form fields with reactive form controls.
+
+Event binding is implemented for submitting the form (ngSubmit="onSubmit()") and resetting the form ((click)="resetForm()").
+
+Conditional rendering is used to display validation messages when fields are touched and invalid.
+
+Success (*ngIf="successMessage") or error (*ngIf="errorMessage") messages are shown after form submission.
+
+****************************************************************************
+
+FrontEnd : src/app/ipl/Components/ cricketercreate.component.ts
+
+The component has a cricketerForm property, which is a reactive form group used to capture cricketer details.
+
+The form captures the following data:
+
+• Cricketer ID
+
+• Team ID
+
+• Cricketer Name
+
+• Age
+
+• Nationality
+
+• Experience
+
+• Role
+
+• Total Runs
+
+• Total Wickets
+
+The component also includes properties for successMessage and errorMessage to manage feedback messages after form submission.
+
+It uses external template and style files for rendering.
+
+The component provides the following methods:
+
+• onSubmit(): Handles form submission, validates the form, simulates a backend error, sets appropriate success or error messages, logs the form data, and resets the form on successful submission.
+
+• simulateBackendError(): Simulates an error if the cricketer name matches a predefined condition.
+
+• resetForm(): Resets the form fields to their initial state.
+
+*******************************************************************************
+
+src/app/ipl/components/cricketercreate/cricketercreate.component.scss
+
+
+
+
+
+Day 22:
+Scenario: For a seamless user journey, IPL wants routing, forms, integration with Backend services, and style enhancements.
+
+
+
+Note: Edit the following files to establish ManyToOne relationships between the entities with Team entity -
+
+src/app/ipl/types/Match.ts
+
+src/app/ipl/types/Cricketer.ts
+
+src/app/ipl/components/matchcreate/matchcreate.component.ts
+
+src/app/ipl/components/cricketercreate/cricketercreate.component.ts
+
+
+
+
+
+Task1: Apply routing in Angular.
+
+
+Implement the following files:
+
+src/app//ipl/ipl-routing.module.ts
+
+src/app//ipl/ipl.module.ts
+
+src/app/auth/auth-routing.module.ts
+
+
+
+
+
+Task2: Use Angular services and HTTP client to fetch data from the SpringBoot application. Implement login workflow for admin and user roles.
+
+
+Implement the following files:
+
+src/app/ipl/services/ipl.service.ts
+
+src/app/auth.interceptors.ts
+
+src/app/auth/services/auth.service.ts
+
+src/app/auth/auth-routing.module.ts
+
+src/app/auth/auth.module.ts
+
+src/app/auth/auth.component.ts
+
+src/app/auth/auth.component.scss
+
+src/app/auth/auth.component.html
+
+src/app/auth/components/login/login.component.ts
+
+src/app/auth/components/login/login.component.html
+
+src/app/auth/components/login/login.component.scss
+
+src/app/auth/components/logout/logout.component.ts
+
+src/app/auth/components/logout/logout.component.html
+
+src/app/auth/components/logout/logout.component.scss
+
+src/app/auth/components/registration/registration.component.ts
+
+src/app/auth/components/registration/registration.component.html
+
+src/app/auth/components/registration/registration.component.scss
+
+
+
+
+
+
+
+Day 23:
+Task: Use Angular services and HTTP client to fetch data from the SpringBoot application.
+Modify the dashboard component to meet the following functionalities when a User with the role of "ADMIN" logs in:
+
+
+
+Display teams, cricketers, and matches in table format.
+Display a navbar on top with links to forms for adding teams, cricketers, and matches.
+Implement IPL services to support the creation of teams, cricketers, and matches through these forms.
+Implement the following files:
+
+cricketercreate.component.html
+
+This Angular template creates a Cricketer Form with fields like Team, Name, Age, Nationality, Experience, Role, Runs, and Wickets.
+
+It uses Reactive Forms with validation (required, min value, etc.), shows error messages, and includes submit + dashboard navigation.
+
+cricketercreate.component.ts
+
+cricketerForm: FormGroup → Reactive form for cricketer data.
+
+cricketer: Cricketer | null → Holds the created cricketer object.
+
+successMessage: string | null → Stores success message after creation.
+
+errorMessage: string | null → Stores error message on failure.
+
+teams: Team[] → List of available teams.
+
+ngOnInit(): void → Initializes form and loads teams.
+
+loadTeams(): void → Fetches teams from service.
+
+onSubmit(): void → Submits form to create cricketer.
+
+handleError(error: HttpErrorResponse): void → Handles client/server errors.
+
+dashboard.component.html
+
+This template displays teams, cricketers, and matches in separate tables.
+
+Uses <app-navbar> for navigation.
+
+teams table → shows ID, Name, Location, and Owner.
+
+cricketers table → shows ID, Name, Age, and associated Team.
+
+matches table → shows ID, Date (with Angular date pipe), and Venue.
+
+dashboard.component.ts
+
+teams: Team[] = [] → Holds the list of teams.
+
+cricketers: Cricketer[] = [] → Holds the list of cricketers.
+
+matches: Match[] = [] → Holds the list of matches.
+
+constructor(private iplService: IplService) → Injects the IPL service for API calls.
+
+ngOnInit(): void → Lifecycle hook to load data when the component initializes.
+
+loadTeams(): void → Fetches all teams from the service.
+
+loadCricketers(): void → Fetches all cricketers from the service.
+
+loadMatches(): void → Fetches all matches from the service.
+
+matchcreate.component.html
+
+Form to create a match with inputs for teams, date, venue, result, and status.
+
+Includes validation, success/error messages, submit button, and dashboard link.
+
+matchcreate.component.ts
+
+matchForm: FormGroup → Reactive form for match creation.
+
+match: Match | null → Holds created match details.
+
+successMessage: string | null → Displays success message.
+
+errorMessage: string | null → Displays error message.
+
+teams: Team[] → Stores list of teams from backend.
+
+ngOnInit(): void → Initializes form and loads teams.
+
+loadTeams(): void → Fetches all teams from backend.
+
+onSubmit(): void → Handles form submission and validation.
+
+addMatch(): void → Calls service to create match and process response.
+
+resetForm(): void → Resets match form.
+
+handleError(error: HttpErrorResponse): void → Handles client/server errors.
+
+teamcreate.component.html
+
+Provides a form to create a new team.
+
+Team Name → Required, no special chars.
+
+Location → Required.
+
+Owner Name → Required, min 2 chars.
+
+Establishment Year → Required, between 1900 and current year.
+
+Includes validation messages for each field.
+
+Buttons: Submit (disabled if invalid), and Dashboard navigation link.
+
+Displays success/error messages after submission.
+
+teamcreate.component.ts
+
+teamForm: FormGroup → Reactive form for capturing team details.
+
+successMessage: string | null → Stores success feedback message.
+
+errorMessage: string | null → Stores error feedback message.
+
+currentYear: number → Holds the current year for validation.
+
+team: Team | null → Stores the created team object from backend.
+
+constructor(formBuilder: FormBuilder, iplService: IplService) → Injects form builder and service dependencies.
+
+ngOnInit(): void → Lifecycle hook to initialize the form.
+
+private initializeForm(): void → Creates form with validation rules.
+
+onSubmit(): void → Handles form submission and validation check.
+
+private addTeam(): void → Calls service to add a team and processes response.
+
+resetForm(): void → Resets the form after successful submission.
+
+private handleError(error: HttpErrorResponse): void → Handles client/server-side errors.
+
+ipl.service.ts
+
+addTeam(team: Team): Observable<Team>
+
+updateTeam(team: Team): Observable<Team>
+
+deleteTeam(teamId: number): Observable<any>
+
+getAllTeams(): Observable<Team[]>
+
+getTeamById(teamId: number): Observable<Team>
+
+addCricketer(cricketer: Cricketer): Observable<Cricketer>
+
+updateCricketer(cricketer: Cricketer): Observable<Cricketer>
+
+deleteCricketer(cricketerId: number): Observable<any>
+
+getAllCricketers(): Observable<Cricketer[]>
+
+getCricketerById(cricketerId: number): Observable<Cricketer>
+
+getCricketersByTeam(teamId: number): Observable<Cricketer[]>
+
+addMatch(match: Match): Observable<Match>
+
+updateMatch(match: Match): Observable<Match>
+
+deleteMatch(matchId: number): Observable<any>
+
+getAllMatches(): Observable<Match[]>
+
+getMatchById(matchId: number): Observable<Match>
+
+getAllMatchesByStatus(status: string): Observable<Team[]>
+
+getAllVotes(): Observable<Vote[]>
+
+createVote(vote: Vote): Observable<Vote>
+
+getVotesCountOfAllCategories(): Observable<Map<string, number>>
+
+getAllTicketBookings(): Observable<TicketBooking[]>
+
+createBooking(ticketBooking: TicketBooking): Observable<TicketBooking>
+
+cancelBooking(bookingId: number): Observable<any>
+
+getBookingsByUserEmail(email: string): Observable<TicketBooking[]>
+
+ipl.module.ts
+
+Declarations: TeamCreate, CricketerCreate, MatchCreate, TicketBooking, Vote, Dashboard
+
+Imports: CommonModule, ReactiveFormsModule, HttpClientModule, IplRoutingModule, RouterModule, SharedModule
+
+Exports: none
+
+Purpose: Feature module for IPL components, routing, and shared functionality.
+
+navbar.component.html
+
+IPL link – Always visible, no hover effect applied.
+
+Add New Team / Cricketer / Match links – Visible only if role !== 'USER'.
+
+<app-logout> – Custom logout button component on the right side.
+
+navbar.component.ts
+
+role: string | null;  // Stores the user role from localStorage
+
+ngOnInit(): void      // Lifecycle hook: initializes role from localStorage
+
+logout(): void        // Removes token and redirects to /auth
+
+shared.module.ts
+
+Declarations: NavBarComponent – Navigation bar
+
+Imports: CommonModule, RouterModule, AuthModule
+
+Exports: NavBarComponent – Reusable in other modules
+
+Purpose: Shared module for common components and features.
+
+
+
+
+
+
+
+Day 24:
+Task: Modify the dashboard component to meet the following functionalities when a User with the role of "USER" logs in:
+Display teams, cricketers, and matches in table format.
+Ability to view votes.
+Ability to view ticket bookings.
+Allow users to vote for their favorite team or cricketer using a button in the navbar.
+Enable users to book tickets for matches that are in the "Scheduled" status through a button in the navbar bar.
+Complete the implementation in the file below:
+
+src/app/ipl/components/dashboard/dashboard.component.ts
+
+src/app/ipl/components/dashboard/dashboard.component.html
+
+src/app/ipl/components/dashboard/dashboard.component.scss
+
+src/app/ipl/components/vote/vote.component.html
+
+src/app/ipl/components/vote/vote.component.ts
+
+src/app/ipl/components/vote/vote.component.scss
+
+src/app/ipl/components/ticketbooking/ticketbooking.component.html
+
+src/app/ipl/components/ticketbooking/ticketbooking.component.ts
+
+src/app/ipl/components/ticketbooking/ticketbooking.component.scss
+
+
+
+
+
+Day 25:
+Task: Update the Dashboard component for user of role “ADMIN” add functionality to perform the following tasks:
+Ability to add/update/delete teams.
+Ability to add/update/delete cricketers.
+Ability to add/update/delete matches.
+Ability to view votes.
+Ability to view ticket bookings.
+Make sure add/edit/delete buttons for teams, cricketers and matches are only visible to User of role “ADMIN”.
+Complete the implementation in the file below:
+
+src/app/ipl/ipl.module.ts
+
+src/app/ipl/components/cricketeredit/cricketeredit.component.ts
+
+src/app/ipl/components/cricketeredit/cricketeredit.component.html
+
+src/app/ipl/components/cricketeredit/cricketeredit.component.scss
+
+src/app/ipl/components/teamedit/teamedit.component.ts
+
+src/app/ipl/components/teamedit/teamedit.component.html
+
+src/app/ipl/components/teamedit/teamedit.component.scss
+
+src/app/ipl/components/matchedit/matchedit.component.ts
+
+src/app/ipl/components/matchedit/matchedit.component.html
+
+src/app/ipl/components/matchedit/matchedit.component.scss
+
+src/app/ipl/components/dashboard/dashboard.component.ts
+
+src/app/ipl/components/dashboard/dashboard.component.html
+
+src/app/ipl/components/dashboard/dashboard.component.scss
+
+
+
+
+
+Day 26:
+Task: Enhancement in UI design using the Bootstrap. Apply Bootstrap for responsive design and style enhancement.
+Note: You are directed to craft well-designed web pages incorporating responsive design by utilizing Bootstrap. The page should be clean and professional while maintaining all the UI and UX needed to complete all the given tasks.
+
+
+
+
+
+Sample I/O Screenshots:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
