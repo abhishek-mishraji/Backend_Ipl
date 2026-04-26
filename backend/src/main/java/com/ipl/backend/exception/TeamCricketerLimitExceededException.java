@@ -1,5 +1,12 @@
 package com.ipl.backend.exception;
 
-public class TeamCricketerLimitExceededException {
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
+@ResponseStatus(HttpStatus.BAD_REQUEST)
+public class TeamCricketerLimitExceededException extends RuntimeException {
+
+    public TeamCricketerLimitExceededException(String message) {
+        super(message);
+    }
 }
